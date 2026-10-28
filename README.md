@@ -27,6 +27,10 @@
 
 ---
 
+> [!TIP]
+> **🐳 Production Reference Architecture:** The `main` branch is the standard production implementation configured for **Docker, Docker Compose, and Stateful Node.js VPS / Cloud deployments** (Render, Railway, Fly.io, DigitalOcean, AWS EC2).
+> *Looking to deploy on Vercel Serverless for free? Switch to the [`vercel-serverless`](https://github.com/AgrShubham/kioskdrop-enterprise/tree/vercel-serverless) branch.*
+
 > [!NOTE]
 > **Operational Posture Notice (ADR D1):** KioskDrop Enterprise is architected as a **Production-Quality Enterprise Simulator & Reference Architecture**. Core business logic, mathematical customs duty models, pure state machines, optimistic concurrency control, and zero-trust asset tracking are fully implemented and verified with automated test suites. External enterprise ecosystems (ServiceNow/Zendesk webhooks, Happay/Zaggle corporate cards, SAP/Oracle/Zoho ERP, and WPC/BIS lookups) interface through clean adapter boundaries with labeled, authentic simulations.
 
