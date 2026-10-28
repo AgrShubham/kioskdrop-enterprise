@@ -28,12 +28,17 @@ Vercel is ideal for zero-maintenance serverless hosting. Because serverless lamb
 ### Step 1: Provision a Free Cloud PostgreSQL Database
 Choose **Option A** (built directly into Vercel) or **Option B** (standalone Neon.tech):
 
-#### **Option A: 1-Click Vercel Postgres (Recommended)**
+#### **Option A: 1-Click Vercel Marketplace Neon (Recommended)**
 1. Log into your [Vercel Dashboard](https://vercel.com/dashboard).
 2. Click the **Storage** tab in the top navigation bar.
-3. Click **Create Database** $\rightarrow$ Select **Postgres (Powered by Neon)**.
-4. Name your database (e.g., `kioskdrop-db`), choose your nearest region, and accept the terms (Free Tier: 256MB compute, 0.5GB storage).
-5. Once created, click **"Connect to Project"** (or keep the connection string handy).
+3. Under **"Marketplace Database Providers"**, locate **Neon** (green square icon) $\rightarrow$ Click **"Create"**.
+4. Click **Continue / Install** to authorize the Neon integration on your team/account.
+5. In the creation modal:
+   * **Database Name:** e.g., `kioskdrop-db`
+   * **Region:** Select your nearest region (e.g., `Washington, D.C. (iad1)` or `Frankfurt (fra1)`)
+   * **Plan:** Free Tier (256MB compute, 0.5GB storage, 100% free)
+6. Under **"Connect to Project"**, select your **`kioskdrop-enterprise`** project.
+   * *Vercel will automatically inject `DATABASE_URL` and `POSTGRES_PRISMA_URL` directly into your project's Environment Variables with zero manual copy-pasting!*
 
 #### **Option B: Standalone Neon.tech (Alternative)**
 1. Sign up for free at [neon.tech](https://neon.tech/).
@@ -42,6 +47,7 @@ Choose **Option A** (built directly into Vercel) or **Option B** (standalone Neo
    ```text
    postgresql://kioskdrop_owner:YOUR_PASSWORD@ep-xyz-pooler.us-east-2.aws.neon.tech/kioskdrop?sslmode=require
    ```
+4. Paste this connection string as `DATABASE_URL` in your Vercel Project Settings $\rightarrow$ Environment Variables.
 
 ---
 
@@ -50,10 +56,10 @@ Choose **Option A** (built directly into Vercel) or **Option B** (standalone Neo
 1. Go to [vercel.com/new](https://vercel.com/new).
 2. Select **Import Git Repository** and choose `AgrShubham/kioskdrop-enterprise`.
 3. **CRITICAL: Select the Branch**:
-   * Change the branch from `main` to **`vercel-serverless`**.
-4. In the **Environment Variables** section, add the following two keys:
-   * **`DATABASE_URL`**: Paste your PostgreSQL connection string from Step 1.
-   * **`PIN_HMAC_SECRET`**: Enter any 32-character random string (e.g., `a1b2c3d4e5f60718293a4b5c6d7e8f90`).
+   * Change the branch to deploy from `main` to **`vercel-serverless`**.
+4. In the **Environment Variables** section:
+   * **`PIN_HMAC_SECRET`**: Enter any 32-character random string (e.g., `0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef`).
+   * **`DATABASE_URL`**: *(If you connected Neon via Option A above, Vercel auto-populates this! If using Option B, paste your connection string here).*
 5. Click **Deploy**.
 
 > [!NOTE]
