@@ -306,7 +306,7 @@ kioskdrop-enterprise/
 
 ### 1. Clone & Install Dependencies
 ```bash
-git clone https://github.com/your-org/kioskdrop-enterprise.git
+git clone https://github.com/AgrShubham/kioskdrop-enterprise.git
 cd kioskdrop-enterprise
 npm install
 ```
@@ -332,6 +332,66 @@ npm run db:seed
 npm run dev
 ```
 Open **[http://localhost:3000](http://localhost:3000)** (or port `3001` if `3000` is active).
+
+---
+
+## 🚢 Deployment Guide
+
+KioskDrop Enterprise is built on a **Stateful Node.js Runtime** (ADR D3) to maintain persistent Server-Sent Events (SSE) connections and SQLite WAL concurrency without external broker overhead.
+
+### Option 1: Docker & Docker Compose (Recommended for Production / VPS)
+
+The project includes an optimized multi-stage `Dockerfile` and `docker-compose.yml` with automated database migration and persistent volume storage.
+
+1. **Clone on your server (DigitalOcean, AWS EC2, Hetzner, etc.):**
+   ```bash
+   git clone https://github.com/AgrShubham/kioskdrop-enterprise.git
+   cd kioskdrop-enterprise
+   ```
+
+2. **Configure environment variables:**
+   ```bash
+   cp .env.example .env
+   # Update PIN_HMAC_SECRET and NEXT_PUBLIC_APP_URL with your production domain
+   ```
+
+3. **Launch with Docker Compose:**
+   ```bash
+   docker compose up -d --build
+   ```
+   * The container automatically executes `npx prisma migrate deploy` and seeds initial SKUs on first boot.
+   * SQLite data is safely persisted in the `kioskdrop_enterprise_db` Docker volume.
+   * Access the application on `http://<your-server-ip>:3000`.
+
+---
+
+### Option 2: 1-Click Cloud PaaS (Render / Railway / Fly.io)
+
+For zero-DevOps managed hosting with persistent volumes:
+
+#### **A. Deploy on Railway.app**
+1. Fork or open [https://github.com/AgrShubham/kioskdrop-enterprise](https://github.com/AgrShubham/kioskdrop-enterprise).
+2. On [Railway.app](https://railway.app/), click **"New Project" $\rightarrow$ "Deploy from GitHub repo"** and select `kioskdrop-enterprise`.
+3. Add a **Persistent Volume** mounted at `/app/prisma` to preserve the SQLite database.
+4. Set Environment Variables:
+   * `NODE_ENV=production`
+   * `DATABASE_URL=file:/app/prisma/dev.db`
+   * `PIN_HMAC_SECRET=<generate-random-32-char-secret>`
+5. Railway will automatically build the `Dockerfile` and deploy the service.
+
+#### **B. Deploy on Render.com**
+1. Create a **New Web Service** and connect your GitHub repository.
+2. Select **Docker** environment.
+3. Attach a **Disk (Persistent Storage)**:
+   * Mount Path: `/app/prisma`
+   * Size: `1 GB`
+4. Set environment variable `DATABASE_URL=file:/app/prisma/dev.db`.
+5. Click **Create Web Service**.
+
+> [!TIP]
+> **Why Not Vercel Serverless?**
+> Standard Vercel deployment operates on ephemeral serverless lambdas. On Vercel, the local SQLite database resets between cold starts, and persistent Server-Sent Events (SSE) streams require external pub/sub infrastructure (e.g., Upstash Redis + Supabase PostgreSQL). For frictionless single-instance deployment, containerized hosting (Docker / Railway / Render) is the optimal architectural fit.
+
 
 ---
 

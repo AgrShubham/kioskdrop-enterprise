@@ -1,0 +1,21 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: kioskdrop-enterprise:latest
+    container_name: kioskdrop_enterprise
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=file:/app/prisma/dev.db
+      - PIN_HMAC_SECRET=0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
+      - NEXT_PUBLIC_APP_URL=http://localhost:3000
+    volumes:
+      - kioskdrop_db:/app/prisma
+
+volumes:
+  kioskdrop_db:
+    name: kioskdrop_enterprise_db

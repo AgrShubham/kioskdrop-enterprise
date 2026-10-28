@@ -1,0 +1,14 @@
+node_modules
+.next
+.git
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+.env
+.env*.local
+npm-debug.log*
+Dockerfile*
+docker-compose*
+README.md
+CHAT_HISTORY.md
