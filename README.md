@@ -341,6 +341,8 @@ Open **[http://localhost:3000](http://localhost:3000)** (or port `3001` if `3000
 
 ## 🚢 Deployment Guide
 
+> 📖 **Complete Walkthrough:** For complete, copy-paste terminal guides for **Vercel**, **DigitalOcean Droplets**, **AWS EC2**, **Let's Encrypt SSL**, and **Nginx Reverse Proxy**, see **[docs/DEPLOYMENT_GUIDE.md](docs/DEPLOYMENT_GUIDE.md)**.
+
 KioskDrop Enterprise is built on a **Stateful Node.js Runtime** (ADR D3) to maintain persistent Server-Sent Events (SSE) connections and SQLite WAL concurrency without external broker overhead.
 
 ### Option 1: Docker & Docker Compose (Recommended for Production / VPS)
