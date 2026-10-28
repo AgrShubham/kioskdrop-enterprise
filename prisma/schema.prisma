@@ -1,0 +1,252 @@
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// User Persona Model with Department and Access Credentials
+model User {
+  id                   String           @id @default(cuid())
+  name                 String
+  email                String           @unique
+  department           String
+  role                 String           @default("EMPLOYEE") // EMPLOYEE | IT_ADMIN | FINOPS_AUDITOR
+  rfidBadgeId          String           @unique
+  biometricTemplateRef String?          // Mock biometric template hash
+  tickets              DispatchTicket[]
+  custodyLogs          CustodyLog[]
+  createdAt            DateTime         @default(now())
+
+  @@index([role])
+}
+
+// Corporate Meeting Rooms with Display Topology
+model MeetingRoom {
+  id            String           @id @default(cuid())
+  name          String           // e.g. "Executive Boardroom 4B"
+  floor         Int
+  building      String
+  displayType   String           // "4K_LED_WALL" | "PROJECTOR_HDMI" | "DUAL_MONITOR"
+  roomSystem    String           // "BYOD_LEGACY" | "TEAMS_ROOM" | "ZOOM_ROOM"
+  qrCodeSlug    String           @unique
+  tickets       DispatchTicket[]
+
+  @@index([floor])
+}
+
+// Dynamic HSN Customs Duty Rates Table
+model TariffRate {
+  id            String        @id @default(cuid())
+  hsnCode       String        @unique // e.g. "85437099", "85182210", "85285900"
+  description   String
+  bcdBp         Int           // Basic Customs Duty in basis points (e.g. 2000 = 20.00%)
+  swsBp         Int           // Social Welfare Surcharge in bp (e.g. 200 = 2.00% of CIF)
+  igstBp        Int           // IGST in basis points (e.g. 1800 = 18.00%)
+  effectiveFrom DateTime      @default(now())
+  skus          HardwareSKU[]
+}
+
+// Hardware SKU Definitions
+model HardwareSKU {
+  id                  String              @id @default(cuid())
+  name                String              // e.g. "Logitech Spotlight BLE Presentation Remote"
+  brand               String
+  modelNumber         String
+  category            String              // DISPLAY_CONVERTER | PRESENTATION_CLICKER | WIRELESS_HDMI_KIT | AUDIO_MIC_KIT | CABLE_HIGH_SPEED
+  wholesalePricePaise Int                 // Price in integer paise (e.g. 680000 = ₹6,800.00)
+  retailPricePaise    Int                 // Price in integer paise (e.g. 1099500 = ₹10,995.00)
+  reorderThreshold    Int                 @default(2)
+  reorderQuantity     Int                 @default(5)
+  tariffRateId        String
+  tariffRate          TariffRate          @relation(fields: [tariffRateId], references: [id])
+  
+  // Technical & Cyber Specs
+  dpAltMode           Boolean             @default(false)
+  powerDeliveryWatts  Int                 @default(0)
+  hdcp22Compliant     Boolean             @default(false)
+  wirelessBand        String?             // "2.4GHz" | "5GHz" | "BLE"
+  encryptionSpec      String?             // "WPA2-Enterprise 802.1X / AES-128"
+  
+  // Regulatory Metadata (Format-validated mock lookup)
+  wpcEtaCertNumber    String?             // e.g. "ETA-SD-20240211409"
+  bisCrsNumber        String?             // e.g. "R-41092831"
+  assets              AssetItem[]
+  poItems             PurchaseOrderItem[]
+
+  @@index([category])
+  @@index([tariffRateId])
+}
+
+// Physical Serialized Hardware Units
+model AssetItem {
+  id                  String             @id @default(cuid())
+  skuId               String
+  sku                 HardwareSKU        @relation(fields: [skuId], references: [id], onDelete: Restrict)
+  serialNumber        String             @unique
+  usbVendorId         String             // e.g. "0x046D" (Logitech)
+  usbProductId        String             // e.g. "0xC53E"
+  hidWhitelisted      Boolean            @default(true) // Authorized HID profile
+  pkiCertStatus       String             @default("VALID_SCEP_SIGNED")
+  condition           String             @default("HEALTHY") // HEALTHY | NEEDS_INSPECTION | DAMAGED
+  availability        String             @default("IN_LOCKER") // IN_LOCKER | RESERVED | OUT | QUARANTINED
+  compartment         LockerCompartment?
+  tickets             DispatchTicket[]
+  custodyLogs         CustodyLog[]
+
+  @@index([skuId])
+  @@index([availability])
+  @@index([condition])
+}
+
+// Physical Locker Station
+model SmartLocker {
+  id                  String              @id @default(cuid())
+  name                String              // e.g. "Floor 4 East Wing SmartHub"
+  floor               Int
+  locationNote        String
+  onlineStatus        Boolean             @default(true)
+  lastHeartbeatAt     DateTime?           @default(now())
+  temperatureC        Float?              @default(22.5)
+  compartments        LockerCompartment[]
+
+  @@index([floor])
+}
+
+// Individual Locker Bay
+model LockerCompartment {
+  id                  String            @id @default(cuid())
+  lockerId            String
+  locker              SmartLocker       @relation(fields: [lockerId], references: [id], onDelete: Restrict)
+  compartmentNumber   Int
+  status              String            @default("STOCKED_AVAILABLE") 
+  // EMPTY | STOCKED_AVAILABLE | RESERVED_FOR_PICKUP | DOOR_OPEN_AWAITING_REMOVAL | CHECKED_OUT | MAINTENANCE_QUARANTINE
+  assetId             String?           @unique
+  asset               AssetItem?        @relation(fields: [assetId], references: [id], onDelete: SetNull)
+  activePinHash       String?           // HMAC-SHA256(PIN, SERVER_PIN_PEPPER)
+  
+  // Hardware Actuators & Sensors
+  solenoidLocked      Boolean           @default(true)
+  doorPhysicalOpen    Boolean           @default(false)
+  irSensorBreakBeam   Boolean           @default(true)  // true = physical item present
+  chargingConnected   Boolean           @default(true)  // true = 5V/3A charging continuity
+  tickets             DispatchTicket[]
+
+  @@unique([lockerId, compartmentNumber])
+  @@index([lockerId, status])
+}
+
+// ITSM Incident & Locker Dispatch Ticket
+model DispatchTicket {
+  id                  String            @id @default(cuid())
+  itsmExternalId      String            @unique // e.g. "INC0049281"
+  userId              String
+  user                User              @relation(fields: [userId], references: [id], onDelete: Restrict)
+  meetingRoomId       String
+  meetingRoom         MeetingRoom       @relation(fields: [meetingRoomId], references: [id], onDelete: Restrict)
+  assetId             String
+  asset               AssetItem         @relation(fields: [assetId], references: [id], onDelete: Restrict)
+  compartmentId       String
+  compartment         LockerCompartment @relation(fields: [compartmentId], references: [id], onDelete: Restrict)
+  reportedSymptom     String
+  accessPinHash       String            // HMAC-SHA256
+  idempotencyKey      String?           @unique
+  status              String            @default("OPEN_RESERVED") 
+  // OPEN_RESERVED | DISPENSED_ACTIVE | RETURNED_CLOSED | EXPIRED | CANCELLED | OVERDUE_ESCALATED
+  createdAt           DateTime          @default(now())
+  expiresAt           DateTime          // Reservation TTL expiry
+  dueAt               DateTime?         // Return due timestamp
+  dispensedAt         DateTime?
+  returnedAt          DateTime?
+
+  @@index([userId])
+  @@index([status])
+  @@index([meetingRoomId, createdAt])
+  @@index([expiresAt])
+}
+
+// Tamper-Evident Digital Chain of Custody Audit Log
+model CustodyLog {
+  id                  String       @id @default(cuid())
+  eventType           String       // RESERVED | DOOR_UNLOCKED | ASSET_REMOVED | ASSET_RETURNED | SECURITY_MISMATCH_ALARM | TICKET_EXPIRED
+  userId              String?
+  user                User?        @relation(fields: [userId], references: [id], onDelete: Restrict)
+  assetId             String?
+  asset               AssetItem?   @relation(fields: [assetId], references: [id], onDelete: Restrict)
+  ticketId            String?
+  lockerName          String
+  compartmentNumber   Int
+  authMethod          String       // PIN | RFID_BADGE | BIOMETRIC | SYSTEM
+  details             String?      // JSON stringified details
+  prevHash            String?      // SHA-256 tamper-evident chain link
+  hash                String       // SHA-256(prevHash + eventType + timestamp + details)
+  timestamp           DateTime     @default(now())
+
+  @@index([timestamp])
+  @@index([eventType])
+}
+
+// B2B Procurement Orders for Locker Restocking
+model PurchaseOrder {
+  id                  String              @id @default(cuid())
+  poNumber            String              @unique // e.g. "PO-2026-001"
+  procurementMode     String              // "DIRECT_IMPORT" | "DOMESTIC_WHOLESALE"
+  vendorName          String
+  totalAmountPaise    Int
+  landedDutyPaise     Int                 @default(0)
+  status              String              @default("PENDING_RECEPTION") // PENDING_RECEPTION | RECEIVED | INSPECTED_STOCKED
+  createdAt           DateTime            @default(now())
+  items               PurchaseOrderItem[]
+  finopsTransactions FinOpsTransaction[]
+
+  @@index([status])
+}
+
+model PurchaseOrderItem {
+  id                  String        @id @default(cuid())
+  purchaseOrderId     String
+  purchaseOrder       PurchaseOrder @relation(fields: [purchaseOrderId], references: [id], onDelete: Cascade)
+  skuId               String
+  sku                 HardwareSKU   @relation(fields: [skuId], references: [id], onDelete: Restrict)
+  quantity            Int
+  unitPricePaise      Int
+
+  @@index([purchaseOrderId])
+}
+
+// FinOps Restocking Transactions & ERP Reconciliation
+model FinOpsTransaction {
+  id                  String         @id @default(cuid())
+  purchaseOrderId     String?
+  purchaseOrder       PurchaseOrder? @relation(fields: [purchaseOrderId], references: [id], onDelete: SetNull)
+  provider            String         // "ZAGGLE_CARD" | "HAPPAY_PETTY_CASH"
+  mccCode             String         @default("5045") // Computer Peripherals MCC
+  policyResult        String         @default("APPROVED") // APPROVED | FLAGGED_POLICY
+  erpSyncTarget       String         // "SAP_S4HANA" | "ORACLE_NETSUITE" | "ZOHO_BOOKS"
+  erpSyncStatus       String         @default("SYNCED") // SYNCED | PENDING_AUDIT | FLAGGED_POLICY
+  vendorName          String
+  amountPaise         Int
+  gstInvoiceNumber    String         // Max 16 chars per CGST Rule 46 (e.g. "INV-2026-09812")
+  itemsSummary        String
+  createdAt           DateTime       @default(now())
+
+  @@index([erpSyncStatus])
+}
+
+// Webhook Audit & Replay Log
+model WebhookEvent {
+  id                  String        @id @default(cuid())
+  direction           String        // "INBOUND" | "OUTBOUND"
+  source              String        // "SERVICENOW" | "ZENDESK"
+  externalEventId     String?       @unique
+  payload             String        // Raw JSON string
+  signatureValid      Boolean       @default(true)
+  latencyMs           Int           @default(0)
+  status              String        // "SUCCESS" | "FAILED" | "REPLAYED"
+  replayOfId          String?
+  createdAt           DateTime      @default(now())
+
+  @@index([source, createdAt])
+}
