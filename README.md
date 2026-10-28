@@ -27,6 +27,10 @@
 
 ---
 
+> [!TIP]
+> **🚀 Vercel Serverless Branch:** This branch is specifically engineered for **100% Free Vercel Serverless Deployment** with automated PostgreSQL schema adaptation ([Neon.tech](https://neon.tech/) / [Vercel Postgres](https://vercel.com/docs/storage/vercel-postgres)), Vercel Cron reservation sweepers (`/api/cron/sweep`), and client-side `BroadcastChannel` synchronization.
+> *Looking for the Docker & VPS reference architecture? Switch to the [`main`](https://github.com/AgrShubham/kioskdrop-enterprise/tree/main) branch.*
+
 > [!NOTE]
 > **Operational Posture Notice (ADR D1):** KioskDrop Enterprise is architected as a **Production-Quality Enterprise Simulator & Reference Architecture**. Core business logic, mathematical customs duty models, pure state machines, optimistic concurrency control, and zero-trust asset tracking are fully implemented and verified with automated test suites. External enterprise ecosystems (ServiceNow/Zendesk webhooks, Happay/Zaggle corporate cards, SAP/Oracle/Zoho ERP, and WPC/BIS lookups) interface through clean adapter boundaries with labeled, authentic simulations.
 
