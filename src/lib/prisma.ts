@@ -21,6 +21,11 @@ if (process.env.NODE_ENV !== "production") {
  */
 export async function ensurePragmas(): Promise<void> {
   if (globalForPrisma.sqlitePragmasInitialized) return;
+  const dbUrl = process.env.DATABASE_URL || "";
+  if (dbUrl.startsWith("postgres://") || dbUrl.startsWith("postgresql://")) {
+    globalForPrisma.sqlitePragmasInitialized = true;
+    return;
+  }
   try {
     await prisma.$queryRawUnsafe("PRAGMA journal_mode = WAL;");
     await prisma.$queryRawUnsafe("PRAGMA busy_timeout = 10000;");

@@ -388,9 +388,31 @@ For zero-DevOps managed hosting with persistent volumes:
 4. Set environment variable `DATABASE_URL=file:/app/prisma/dev.db`.
 5. Click **Create Web Service**.
 
-> [!TIP]
-> **Why Not Vercel Serverless?**
-> Standard Vercel deployment operates on ephemeral serverless lambdas. On Vercel, the local SQLite database resets between cold starts, and persistent Server-Sent Events (SSE) streams require external pub/sub infrastructure (e.g., Upstash Redis + Supabase PostgreSQL). For frictionless single-instance deployment, containerized hosting (Docker / Railway / Render) is the optimal architectural fit.
+---
+
+### Option 3: 100% Free Vercel Deployment (with Vercel Postgres or Neon)
+
+You can deploy KioskDrop Enterprise completely free on **Vercel** paired with a free cloud PostgreSQL database (via **Vercel Postgres** or **Neon.tech**).
+
+#### **Step-by-Step Vercel Deployment:**
+
+1. **Import Repository to Vercel**:
+   * Go to [vercel.com/new](https://vercel.com/new) and import `AgrShubham/kioskdrop-enterprise`.
+
+2. **Add Free Serverless Database**:
+   * *Option A (Direct in Vercel):* Go to the **Storage** tab in your Vercel project $\rightarrow$ Click **"Create Database"** $\rightarrow$ Select **"Postgres"** (Powered by Neon, 100% free). Connect it to your project. Vercel automatically sets `POSTGRES_PRISMA_URL` and `DATABASE_URL`.
+   * *Option B (Neon.tech directly):* Create a free database at [Neon.tech](https://neon.tech/) and paste the `DATABASE_URL` into your Vercel Project Environment Variables.
+
+3. **Configure Environment Variables**:
+   In your Vercel Project Settings $\rightarrow$ Environment Variables:
+   * `PIN_HMAC_SECRET` = `<any-32-character-random-hex-string>`
+   * `DATABASE_URL` = `<your-postgres-connection-string>`
+
+4. **Deploy**:
+   * Click **Deploy**.
+   * The automated build pipeline ([scripts/prepare-build.js](file:///d:/PROJECTS/Ricoz%20Internship/Project%201/scripts/prepare-build.js)) automatically detects the PostgreSQL environment, switches Prisma to `provider = "postgresql"`, pushes the database schema, and compiles Next.js.
+   * Real-time multi-tab synchronization is powered by browser `BroadcastChannel` and adaptive polling fallback.
+   * Automated reservation TTL cleanup runs via [vercel.json](file:///d:/PROJECTS/Ricoz%20Internship/Project%201/vercel.json) Vercel Cron.
 
 
 ---
