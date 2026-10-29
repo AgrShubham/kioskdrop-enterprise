@@ -3,8 +3,8 @@
 > **Metadata:**
 > - **Conversation ID:** `5c60082d-60d9-40f3-95ef-45ec4633a678`
 > - **Workspace:** `d:\PROJECTS\Ricoz Internship\Project 1`
-> - **Last Synchronized:** 2026-10-28T19:40:30.254Z
-> - **Total Recorded Exchanges:** 42 entries
+> - **Last Synchronized:** 2026-10-29T05:07:51.251Z
+> - **Total Recorded Exchanges:** 46 entries
 
 ---
 
@@ -1114,6 +1114,94 @@ Vercel previously called this *"Vercel Postgres (Powered by Neon)"*. They have s
 ### 👤 Turn 18: User Request *(Step 605)*
 
 give the updated version guide
+
+---
+
+### 🤖 Assistant Response *(Step 624)*
+
+The deployment guide has been updated in [docs/DEPLOYMENT_GUIDE.md](file:///d:/PROJECTS/Ricoz%20Internship/Project%201/docs/DEPLOYMENT_GUIDE.md) and pushed to both branches on GitHub.
+
+Here is the exact step-by-step guide matching Vercel's current dashboard UI:
+
+---
+
+### 🚀 Updated Vercel Deployment Walkthrough (Current Dashboard UI)
+
+#### Step 1: Create Free Serverless Database on Vercel
+1. In your **[Vercel Dashboard](https://vercel.com/dashboard)**, click the **Storage** tab.
+2. Under **"Marketplace Database Providers"**, locate **Neon** (green square icon) $\rightarrow$ Click **"Create"**.
+3. Click **Continue / Install** to link Neon to your Vercel account.
+4. In the creation dialog:
+   * **Database Name:** e.g., `kioskdrop-db`
+   * **Region:** Select your nearest region (e.g., `Washington, D.C. (iad1)` or `Frankfurt (fra1)`)
+   * **Plan:** Free Tier (100% free)
+5. Under **"Connect to Project"**, select **`kioskdrop-enterprise`**.
+   * *Vercel will automatically inject `DATABASE_URL` and `POSTGRES_PRISMA_URL` directly into your project's Environment Variables!*
+
+---
+
+#### Step 2: Deploy the `vercel-serverless` Branch
+1. Go to **[vercel.com/new](https://vercel.com/new)** $\rightarrow$ Select your repository: **`AgrShubham/kioskdrop-enterprise`**.
+2. **⚠️ CRITICAL: Choose the Branch**:
+   * Change the branch from `main` to **`vercel-serverless`**.
+3. Under **Environment Variables**:
+   * **`PIN_HMAC_SECRET`**: Enter any 32-character random string (e.g. `0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef`).
+   * **`DATABASE_URL`**: *(If you connected Neon in Step 1, Vercel auto-populates this!)*
+4. Click **Deploy**!
+
+---
+
+### What Happens Automatically
+* The build pipeline detects PostgreSQL, switches Prisma to `provider = "postgresql"`, and executes `prisma db push` to generate all tables and indexes.
+* Vercel Cron will automatically run `/api/cron/sweep` every 10 minutes to release uncollected reservations.
+* Your live production URL (e.g., `https://kioskdrop-enterprise.vercel.app`) will be ready in under 2 minutes!
+
+---
+
+### 👤 Turn 19: User Request *(Step 625)*
+
+how to select the branch here
+
+---
+
+### 🤖 Assistant Response *(Step 626)*
+
+You have two easy ways to select the branch:
+
+---
+
+### Method 1: Click directly on `main` on this screen
+
+Look at the top box where it says:
+> **`AgrShubham/kioskdrop-enterprise`** &nbsp; `⑂ main`
+
+1. Click directly on the word **`main`** (or the branch icon `⑂` next to it).
+2. A dropdown list of your repository branches will appear.
+3. Select **`vercel-serverless`**.
+
+---
+
+### Method 2: If the dropdown does not open
+
+If Vercel doesn't allow clicking the branch name on this initial screen, don't worry:
+
+1. Go ahead and click **"Create Project"** on this screen.
+2. Once the project dashboard opens:
+   * Go to **Settings** (top tab) $\rightarrow$ **Git** (left sidebar).
+   * Under **Production Branch**, change `main` to:
+     ```
+     vercel-serverless
+     ```
+   * Click **Save**.
+3. Now go to the **Deployments** tab $\rightarrow$ click **Redeploy**.
+
+It will now build and deploy the **`vercel-serverless`** branch!
+
+---
+
+### 👤 Turn 20: User Request *(Step 627)*
+
+kindly create a 12 pager bussiness deck of your assigned project
 
 ---
 

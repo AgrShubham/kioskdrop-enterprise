@@ -21,7 +21,8 @@
 [Operational Views](#-core-operational-views) •
 [Engineering Standards](#-engineering--mathematical-rigor) •
 [API Reference](#-api-specification) •
-[Decision Records](#-architecture-decision-records-adrs)
+[Decision Records](#-architecture-decision-records-adrs) •
+[Executive Business Deck](docs/BUSINESS_DECK.md)
 
 </div>
 
