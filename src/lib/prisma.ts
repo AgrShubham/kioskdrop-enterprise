@@ -16,11 +16,16 @@ if (process.env.NODE_ENV !== "production") {
 }
 
 /**
- * Initializes SQLite pragmas (WAL mode and 10s busy timeout).
- * Note: $queryRawUnsafe must be used because PRAGMA queries return rows (e.g. 'wal').
+ * Initializes SQLite pragmas only when running SQLite (WAL mode and 10s busy timeout).
  */
 export async function ensurePragmas(): Promise<void> {
   if (globalForPrisma.sqlitePragmasInitialized) return;
+  const dbUrl = process.env.DATABASE_URL || "";
+  const isPostgres = dbUrl.startsWith("postgres://") || dbUrl.startsWith("postgresql://");
+  if (isPostgres) {
+    globalForPrisma.sqlitePragmasInitialized = true;
+    return;
+  }
   try {
     await prisma.$queryRawUnsafe("PRAGMA journal_mode = WAL;");
     await prisma.$queryRawUnsafe("PRAGMA busy_timeout = 10000;");
