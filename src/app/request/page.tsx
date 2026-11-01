@@ -379,10 +379,10 @@ function RequestPortalContent() {
             /* Interactive Pickup Pass Card */
             <div className="p-6 rounded-2xl border-2 border-primary bg-card shadow-2xl space-y-6 sticky top-24 animate-in fade-in zoom-in-95 duration-200">
               <div className="flex items-center justify-between pb-3 border-b border-border">
-                <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/20">
                   <CheckCircle2 className="w-3.5 h-3.5" /> Locker Reserved
                 </div>
-                <div className="text-xs font-mono font-bold text-amber-400 flex items-center gap-1">
+                <div className="text-xs font-mono font-bold text-amber-600 dark:text-amber-400 flex items-center gap-1">
                   <Clock className="w-3.5 h-3.5" /> TTL: {timeLeft}
                 </div>
               </div>

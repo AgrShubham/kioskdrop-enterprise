@@ -353,7 +353,7 @@ function KioskSimulatorContent() {
                 </span>
               </div>
               <div className="flex items-center gap-3 font-mono text-[11px]">
-                <span className="text-emerald-400 flex items-center gap-1">
+                <span className="text-emerald-600 dark:text-emerald-400 flex items-center gap-1 font-semibold">
                   ● ONLINE
                 </span>
                 <span className="text-muted-foreground">
@@ -429,7 +429,7 @@ function KioskSimulatorContent() {
                       </div>
                     )}
                     {isReserved && comp.tickets[0] && (
-                      <div className="text-[9px] font-bold text-amber-400 truncate">
+                      <div className="text-[9px] font-bold text-amber-600 dark:text-amber-400 truncate">
                         Reserved: {comp.tickets[0].user.name}
                       </div>
                     )}
@@ -442,11 +442,13 @@ function KioskSimulatorContent() {
                       className="flex items-center gap-0.5"
                     >
                       {comp.irSensorBreakBeam ? (
-                        <PackageCheck className="w-3 h-3 text-emerald-400" />
+                        <PackageCheck className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
                       ) : (
                         <PackageX className="w-3 h-3 text-muted-foreground" />
                       )}
-                      <span>{comp.irSensorBreakBeam ? "ITEM" : "CLEAR"}</span>
+                      <span className={comp.irSensorBreakBeam ? "text-emerald-700 dark:text-emerald-400 font-medium" : ""}>
+                        {comp.irSensorBreakBeam ? "ITEM" : "CLEAR"}
+                      </span>
                     </span>
 
                     <span
@@ -456,18 +458,20 @@ function KioskSimulatorContent() {
                       <Zap
                         className={`w-3 h-3 ${
                           comp.chargingConnected
-                            ? "text-amber-400"
+                            ? "text-amber-600 dark:text-amber-400"
                             : "text-muted-foreground"
                         }`}
                       />
-                      <span>{comp.chargingConnected ? "CHG" : "OFF"}</span>
+                      <span className={comp.chargingConnected ? "text-amber-700 dark:text-amber-400 font-medium" : ""}>
+                        {comp.chargingConnected ? "CHG" : "OFF"}
+                      </span>
                     </span>
                   </div>
 
                   {/* Interactive Action Overlay when Door is Open */}
                   {isDoorOpen && (
                     <div className="absolute inset-0 bg-background/95 rounded-xl p-2.5 flex flex-col justify-center gap-1.5 z-10 animate-in fade-in duration-150">
-                      <div className="text-[10px] font-bold text-center text-sky-400 uppercase tracking-wider">
+                      <div className="text-[10px] font-bold text-center text-sky-600 dark:text-sky-400 uppercase tracking-wider">
                         Door Unlocked!
                       </div>
                       <button
@@ -550,7 +554,7 @@ function KioskSimulatorContent() {
                           ? "bg-primary hover:bg-primary/90 text-primary-foreground font-black text-xs"
                           : isClear
                           ? "bg-secondary text-muted-foreground hover:text-foreground text-xs"
-                          : "bg-secondary/60 hover:bg-secondary text-foreground text-base border border-border/50"
+                          : "bg-card hover:bg-secondary/80 text-foreground text-base border border-border/80 shadow-xs"
                       }`}
                     >
                       {btn}
@@ -568,7 +572,7 @@ function KioskSimulatorContent() {
               <button
                 onClick={handleRfidTap}
                 disabled={isSubmitting}
-                className="w-full py-2.5 px-3 rounded-xl bg-secondary hover:bg-secondary/80 border border-border text-foreground font-bold text-xs transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm"
+                className="w-full py-2.5 px-3 rounded-xl bg-secondary/80 hover:bg-secondary border border-border text-foreground font-bold text-xs transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm"
               >
                 <CreditCard className="w-4 h-4 text-primary" />
                 <span>Tap Corporate RFID Badge ({activeSession?.rfidBadgeId || "RFID-EMP-8821"})</span>
@@ -581,7 +585,7 @@ function KioskSimulatorContent() {
                 className={`p-3 rounded-xl text-xs font-medium border animate-in fade-in duration-200 ${
                   isError
                     ? "bg-destructive/10 border-destructive/20 text-destructive"
-                    : "bg-emerald-500/10 border-emerald-500/20 text-emerald-400"
+                    : "bg-emerald-50 dark:bg-emerald-500/10 border-emerald-200 dark:border-emerald-500/20 text-emerald-800 dark:text-emerald-400"
                 }`}
               >
                 <div className="flex items-start gap-2">

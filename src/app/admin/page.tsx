@@ -30,8 +30,12 @@ import {
   CartesianGrid,
 } from "recharts";
 import { useTelemetry } from "@/hooks/useTelemetry";
+import { useTheme } from "@/components/ThemeProvider";
 
 export default function AdminCommandCenter() {
+  const { resolvedTheme } = useTheme();
+  const isDark = resolvedTheme === "dark";
+
   const [activeTab, setActiveTab] = useState<
     "COMPLIANCE" | "FINOPS" | "ANALYTICS" | "WEBHOOKS"
   >("COMPLIANCE");
@@ -255,9 +259,9 @@ export default function AdminCommandCenter() {
 
       {/* RBAC Warning Banner if logged in as Employee */}
       {isEmployee && (
-        <div className="p-4 rounded-xl border border-amber-500/30 bg-amber-500/10 text-amber-300 text-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+        <div className="p-4 rounded-xl border border-amber-200 dark:border-amber-500/30 bg-amber-50 dark:bg-amber-500/10 text-amber-900 dark:text-amber-300 text-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-xs">
           <div className="flex items-center gap-2">
-            <AlertTriangle className="w-4 h-4 text-amber-400 shrink-0" />
+            <AlertTriangle className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0" />
             <span>
               You are currently viewing as <strong>Aarav Sharma (EMPLOYEE)</strong>. Some administrative write controls are restricted by server-side RBAC.
             </span>
@@ -407,7 +411,7 @@ export default function AdminCommandCenter() {
                       <span>• Integrated Goods & Services Tax (IGST 18%):</span>
                       <span className="text-foreground">{calcResult.formatted.igstINR}</span>
                     </div>
-                    <div className="flex justify-between border-t border-border pt-1 font-bold text-emerald-400">
+                    <div className="flex justify-between border-t border-border pt-1 font-bold text-emerald-700 dark:text-emerald-400">
                       <span>Effective Cost Net of Recoverable ITC (CIF + BCD + SWS):</span>
                       <span>{calcResult.formatted.netCostAfterItcINR}</span>
                     </div>
@@ -456,7 +460,7 @@ export default function AdminCommandCenter() {
                         <td className="py-3 px-3 font-mono text-muted-foreground">{asset.usbProductId}</td>
                         <td className="py-3 px-3 font-mono text-[11px]">
                           {asset.sku.wpcEtaCertNumber ? (
-                            <span className="text-emerald-400">{asset.sku.wpcEtaCertNumber}</span>
+                            <span className="text-emerald-700 dark:text-emerald-400 font-semibold">{asset.sku.wpcEtaCertNumber}</span>
                           ) : (
                             <span className="text-muted-foreground">N/A (Cabled)</span>
                           )}
@@ -470,8 +474,8 @@ export default function AdminCommandCenter() {
                           <span
                             className={`px-2 py-0.5 rounded text-[10px] font-bold ${
                               asset.condition === "HEALTHY"
-                                ? "bg-emerald-500/10 text-emerald-400"
-                                : "bg-destructive/10 text-destructive"
+                                ? "bg-emerald-50 dark:bg-emerald-500/10 text-emerald-800 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/20"
+                                : "bg-destructive/10 text-destructive border border-destructive/20"
                             }`}
                           >
                             {asset.condition}
@@ -483,8 +487,8 @@ export default function AdminCommandCenter() {
                             disabled={isEmployee}
                             className={`px-2.5 py-1 rounded-lg text-[10px] font-bold transition-colors cursor-pointer ${
                               isWhitelisted
-                                ? "bg-emerald-500/20 text-emerald-400 hover:bg-emerald-500/30"
-                                : "bg-destructive/20 text-destructive hover:bg-destructive/30"
+                                ? "bg-emerald-50 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/30 hover:bg-emerald-100 dark:hover:bg-emerald-500/30"
+                                : "bg-destructive/10 dark:bg-destructive/20 text-destructive border border-destructive/20 hover:bg-destructive/20"
                             } disabled:opacity-40 disabled:cursor-not-allowed`}
                           >
                             {isWhitelisted ? "WHITELISTED" : "BLOCKED"}
@@ -507,7 +511,7 @@ export default function AdminCommandCenter() {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
             <div className="p-5 rounded-2xl border border-border bg-card shadow-sm space-y-1">
               <div className="text-xs font-bold text-muted-foreground uppercase">Total Wholesale Savings</div>
-              <div className="text-2xl font-black text-emerald-400 font-mono">
+              <div className="text-2xl font-black text-emerald-700 dark:text-emerald-400 font-mono">
                 ₹{(totalSavingsPaise / 100).toLocaleString("en-IN", { minimumFractionDigits: 2 })}
               </div>
               <div className="text-[11px] text-muted-foreground">B2B procurement vs emergency courier retail</div>
@@ -591,7 +595,7 @@ export default function AdminCommandCenter() {
                 </div>
 
                 {restockMessage && (
-                  <div className="p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-medium">
+                  <div className="p-3 rounded-lg bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/20 text-emerald-800 dark:text-emerald-400 text-xs font-medium">
                     {restockMessage}
                   </div>
                 )}
@@ -640,7 +644,7 @@ export default function AdminCommandCenter() {
                           ₹{(txn.amountPaise / 100).toLocaleString("en-IN", { minimumFractionDigits: 2 })}
                         </td>
                         <td className="py-2.5 px-3">
-                          <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/10 text-emerald-400">
+                          <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-50 dark:bg-emerald-500/10 text-emerald-800 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/20">
                             {txn.erpSyncTarget} • {txn.erpSyncStatus}
                           </span>
                         </td>
@@ -681,8 +685,8 @@ export default function AdminCommandCenter() {
               ))}
             </div>
           ) : (
-            <div className="p-4 rounded-xl border border-emerald-500/30 bg-emerald-500/10 text-emerald-400 text-xs flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4" /> All conference rooms within normal consumption loss thresholds (&lt;4 adapters in 14 days).
+            <div className="p-4 rounded-xl border border-emerald-200 dark:border-emerald-500/30 bg-emerald-50 dark:bg-emerald-500/10 text-emerald-800 dark:text-emerald-400 text-xs flex items-center gap-2">
+              <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" /> All conference rooms within normal consumption loss thresholds (&lt;4 adapters in 14 days).
             </div>
           )}
 
@@ -726,7 +730,7 @@ export default function AdminCommandCenter() {
                     </div>
                     <div className="p-2 rounded-lg bg-card border border-border">
                       <div className="text-[10px] text-muted-foreground">Checked Out</div>
-                      <div className="font-bold text-sky-400">{metric.checkedOutBays}</div>
+                      <div className="font-bold text-sky-600 dark:text-sky-400">{metric.checkedOutBays}</div>
                     </div>
                     <div className="p-2 rounded-lg bg-card border border-border">
                       <div className="text-[10px] text-muted-foreground">Quarantine</div>
@@ -751,14 +755,22 @@ export default function AdminCommandCenter() {
               <div className="h-72 w-full pt-4">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={analyticsData.consumptionTrends}>
-                    <CartesianGrid strokeDasharray="3 3" opacity={0.2} />
-                    <XAxis dataKey="month" stroke="#888888" fontSize={12} />
-                    <YAxis stroke="#888888" fontSize={12} tickFormatter={(v) => `₹${v / 1000}k`} />
+                    <CartesianGrid strokeDasharray="3 3" stroke={isDark ? "#334155" : "#e2e8f0"} opacity={0.6} />
+                    <XAxis dataKey="month" stroke={isDark ? "#94a3b8" : "#64748b"} fontSize={12} />
+                    <YAxis stroke={isDark ? "#94a3b8" : "#64748b"} fontSize={12} tickFormatter={(v) => `₹${v / 1000}k`} />
                     <Tooltip
                       formatter={(val: any) => [`₹${Number(val).toLocaleString()}`, ""]}
-                      contentStyle={{ backgroundColor: "#1e293b", borderColor: "#334155", borderRadius: "8px" }}
+                      contentStyle={{
+                        backgroundColor: isDark ? "#0f172a" : "#ffffff",
+                        borderColor: isDark ? "#334155" : "#e2e8f0",
+                        borderRadius: "10px",
+                        color: isDark ? "#f8fafc" : "#020817",
+                        boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1)",
+                      }}
+                      itemStyle={{ color: isDark ? "#f8fafc" : "#020817" }}
+                      labelStyle={{ fontWeight: "bold", color: isDark ? "#f8fafc" : "#020817" }}
                     />
-                    <Legend />
+                    <Legend wrapperStyle={{ paddingTop: "8px", fontSize: "12px" }} />
                     <Bar dataKey="wholesaleINR" name="Wholesale B2B Cost" fill="#3b82f6" radius={[4, 4, 0, 0]} />
                     <Bar dataKey="retailAvoidedINR" name="Retail Avoided" fill="#10b981" radius={[4, 4, 0, 0]} />
                     <Bar dataKey="savingsINR" name="Net Enterprise Savings" fill="#8b5cf6" radius={[4, 4, 0, 0]} />
@@ -813,16 +825,16 @@ export default function AdminCommandCenter() {
                       </td>
                       <td className="py-3 px-3 font-mono">{evt.latencyMs}ms</td>
                       <td className="py-3 px-3">
-                        <span className="text-emerald-400 font-bold">HMAC VALID</span>
+                        <span className="text-emerald-700 dark:text-emerald-400 font-bold">HMAC VALID</span>
                       </td>
                       <td className="py-3 px-3">
                         <span
                           className={`px-2 py-0.5 rounded text-[10px] font-bold ${
                             evt.status === "SUCCESS"
-                              ? "bg-emerald-500/10 text-emerald-400"
+                              ? "bg-emerald-50 dark:bg-emerald-500/10 text-emerald-800 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/20"
                               : evt.status === "REPLAYED"
-                              ? "bg-sky-500/10 text-sky-400"
-                              : "bg-destructive/10 text-destructive"
+                              ? "bg-sky-50 dark:bg-sky-500/10 text-sky-800 dark:text-sky-400 border border-sky-200 dark:border-sky-500/20"
+                              : "bg-destructive/10 text-destructive border border-destructive/20"
                           }`}
                         >
                           {evt.status}

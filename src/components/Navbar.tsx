@@ -12,6 +12,7 @@ import {
   Radio,
   ChevronDown,
 } from "lucide-react";
+import { ThemeToggle } from "./ThemeToggle";
 
 interface UserPersona {
   userId: string;
@@ -111,11 +112,14 @@ export function Navbar() {
         </nav>
 
         {/* Status Pill & Role Impersonator Switcher */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3">
+          {/* Theme Toggle Button */}
+          <ThemeToggle />
+
           {/* Live SSE Telemetry indicator */}
           <div
             title="Real-time Server-Sent Events (SSE) Telemetry Active"
-            className="hidden lg:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
+            className="hidden lg:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/20"
           >
             <span className="relative flex h-2 w-2">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
