@@ -15,9 +15,9 @@ Choose your deployment target and use the corresponding GitHub branch:
 
 | Deployment Platform | Recommended Branch | Database Used | Real-Time Engine | Pricing |
 | :--- | :--- | :--- | :--- | :--- |
-| **Vercel** | **`vercel-serverless`** | Free Cloud PostgreSQL (Neon / Supabase) | BroadcastChannel + Adaptive Polling | **100% Free** |
-| **DigitalOcean / AWS / VPS** | **`main`** | SQLite with WAL mode (`/app/prisma/dev.db`) | Persistent Server-Sent Events (SSE) Route Handler | ~$4–$6/month |
-| **Railway.app / Render** | **`main`** | SQLite with persistent volume mount | Persistent Server-Sent Events (SSE) Route Handler | Free tier / ~$5/month |
+| **Vercel Production** | **`main`** | Neon Lakebase Postgres | Neon Realtime WebSocket + SSE Bus | **100% Free** |
+| **Docker / VPS / Compose** | **`docker`** | Zero-dependency SQLite WAL (`/app/prisma/dev.db`) | Persistent Server-Sent Events (SSE) Route Handler | ~$4–$6/month |
+| **Vercel Serverless (Alt)** | **`vercel-serverless`** | Free Cloud PostgreSQL (Neon) | BroadcastChannel + Adaptive Polling | **100% Free** |
 
 ---
 
@@ -110,8 +110,8 @@ docker compose version
 git clone https://github.com/AgrShubham/kioskdrop-enterprise.git
 cd kioskdrop-enterprise
 
-# Ensure you are on the main branch
-git checkout main
+# Switch to the dedicated docker branch
+git checkout docker
 
 # Create environment configuration
 cp .env.example .env
