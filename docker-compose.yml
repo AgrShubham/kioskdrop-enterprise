@@ -11,7 +11,11 @@ services:
     environment:
       - NODE_ENV=production
       - DATABASE_URL=file:/app/prisma/dev.db
-      - PIN_HMAC_SECRET=0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
+      - SERVER_PIN_PEPPER=kioskdrop-secret-pepper-2026-production-entropy
+      - SESSION_SECRET=kioskdrop-session-secret-key-32charsmin-abc123
+      - WEBHOOK_SIGNING_SECRET=kioskdrop-webhook-hmac-sha256-signing-secret
+      - RESERVATION_TTL_MINUTES=10
+      - RETURN_DUE_HOURS=4
       - NEXT_PUBLIC_APP_URL=http://localhost:3000
     volumes:
       - kioskdrop_db:/app/prisma
