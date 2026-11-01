@@ -264,18 +264,18 @@ function RequestPortalContent() {
                       setSelectedSymptom(symptom.code);
                       setReservation(null);
                     }}
-                    className={`p-4 rounded-xl border cursor-pointer transition-all ${
+                    className={`p-4 rounded-xl border cursor-pointer transition-all duration-200 glass-chamfer ${
                       isSelected
-                        ? "border-primary bg-primary/5 shadow-md shadow-primary/10"
-                        : "border-border bg-card hover:border-primary/50"
+                        ? "border-primary bg-primary/[0.08] dark:bg-primary/[0.12] shadow-md dark:shadow-[0_0_20px_rgba(59,130,246,0.2)]"
+                        : "border-border/80 bg-card/80 hover:border-primary/50 hover:bg-card"
                     }`}
                   >
                     <div className="flex items-start gap-3">
                       <div
-                        className={`p-2.5 rounded-lg mt-0.5 ${
+                        className={`p-2.5 rounded-xl mt-0.5 transition-all ${
                           isSelected
-                            ? "bg-primary text-primary-foreground"
-                            : "bg-secondary text-muted-foreground"
+                            ? "bg-primary text-primary-foreground shadow-md shadow-primary/30"
+                            : "bg-secondary/80 text-muted-foreground"
                         }`}
                       >
                         <Icon className="w-5 h-5" />
@@ -377,9 +377,9 @@ function RequestPortalContent() {
             </div>
           ) : (
             /* Interactive Pickup Pass Card */
-            <div className="p-6 rounded-2xl border-2 border-primary bg-card shadow-2xl space-y-6 sticky top-24 animate-in fade-in zoom-in-95 duration-200">
+            <div className="p-6 rounded-2xl border-2 border-primary/60 dark:border-primary/50 bg-card/90 backdrop-blur-md shadow-2xl space-y-6 sticky top-24 animate-in fade-in zoom-in-95 duration-200 glass-chamfer dark:shadow-[0_10px_35px_rgba(0,0,0,0.5),0_0_30px_rgba(59,130,246,0.15)]">
               <div className="flex items-center justify-between pb-3 border-b border-border">
-                <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/20">
+                <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/30 dark:shadow-[0_0_10px_rgba(16,185,129,0.2)]">
                   <CheckCircle2 className="w-3.5 h-3.5" /> Locker Reserved
                 </div>
                 <div className="text-xs font-mono font-bold text-amber-600 dark:text-amber-400 flex items-center gap-1">
@@ -401,11 +401,11 @@ function RequestPortalContent() {
               </div>
 
               {/* 6-Digit OTP */}
-              <div className="p-5 rounded-xl border border-primary/40 bg-primary/10 text-center space-y-2 relative group">
+              <div className="p-5 rounded-2xl border border-primary/40 bg-primary/10 dark:bg-primary/[0.12] dark:border-primary/40 text-center space-y-2 relative group glass-chamfer dark:shadow-[inset_0_0_20px_rgba(59,130,246,0.1),0_0_20px_rgba(59,130,246,0.15)]">
                 <div className="text-[11px] text-muted-foreground font-semibold uppercase tracking-wider flex items-center justify-center gap-1">
                   <KeyRound className="w-3.5 h-3.5 text-primary" /> Kiosk One-Time Access PIN
                 </div>
-                <div className="text-4xl font-mono font-black tracking-widest text-foreground select-all">
+                <div className="text-4xl font-mono font-black tracking-widest text-foreground select-all drop-shadow-sm">
                   {reservation.accessPin}
                 </div>
                 <button

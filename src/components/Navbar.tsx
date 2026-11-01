@@ -78,15 +78,15 @@ export function Navbar() {
   ];
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border/80 bg-background/90 backdrop-blur-md">
+    <header className="sticky top-0 z-50 w-full border-b border-border/80 bg-background/80 backdrop-blur-xl transition-colors duration-200 shadow-[0_4px_20px_rgba(0,0,0,0.03)] dark:shadow-[0_4px_25px_rgba(0,0,0,0.4)]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 flex h-16 items-center justify-between gap-4">
         {/* Brand */}
-        <Link href="/" className="flex items-center gap-2.5 font-bold text-lg tracking-tight">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-sm shadow-primary/30">
+        <Link href="/" className="flex items-center gap-2.5 font-bold text-lg tracking-tight group">
+          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-500 text-white shadow-md shadow-blue-500/25 ring-1 ring-white/20 group-hover:scale-105 transition-transform">
             <ShieldCheck className="h-5 w-5" />
           </div>
           <span className="hidden sm:inline">
-            KioskDrop <span className="text-primary font-normal text-sm border border-primary/30 bg-primary/10 px-1.5 py-0.5 rounded ml-1">Enterprise</span>
+            KioskDrop <span className="text-primary font-normal text-sm border border-primary/30 bg-primary/10 px-1.5 py-0.5 rounded-md ml-1">Enterprise</span>
           </span>
         </Link>
 
@@ -98,10 +98,10 @@ export function Navbar() {
               <Link
                 key={link.href}
                 href={link.href}
-                className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-colors ${
+                className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs sm:text-sm font-medium transition-all ${
                   link.active
-                    ? "bg-primary text-primary-foreground shadow-sm shadow-primary/20"
-                    : "text-muted-foreground hover:text-foreground hover:bg-secondary/60"
+                    ? "bg-primary text-primary-foreground shadow-md shadow-primary/25 font-semibold"
+                    : "text-muted-foreground hover:text-foreground hover:bg-secondary/70"
                 }`}
               >
                 <Icon className="h-4 w-4" />
@@ -119,7 +119,7 @@ export function Navbar() {
           {/* Live SSE Telemetry indicator */}
           <div
             title="Real-time Server-Sent Events (SSE) Telemetry Active"
-            className="hidden lg:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/20"
+            className="hidden lg:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/30 dark:shadow-[0_0_12px_rgba(16,185,129,0.18)]"
           >
             <span className="relative flex h-2 w-2">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
@@ -133,7 +133,7 @@ export function Navbar() {
           <div className="relative">
             <button
               onClick={() => setDropdownOpen(!dropdownOpen)}
-              className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border bg-card hover:bg-secondary/60 text-xs sm:text-sm font-medium transition-colors shadow-sm"
+              className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl border border-border bg-card/90 hover:bg-secondary/80 text-xs sm:text-sm font-medium transition-all shadow-sm glass-chamfer"
             >
               <div className="h-6 w-6 rounded-full bg-primary/20 text-primary flex items-center justify-center text-xs font-bold">
                 {session?.name.charAt(0) || "U"}
@@ -148,7 +148,7 @@ export function Navbar() {
             </button>
 
             {dropdownOpen && (
-              <div className="absolute right-0 mt-2 w-64 rounded-xl border border-border bg-card p-2 shadow-xl z-50 text-xs">
+              <div className="absolute right-0 mt-2 w-64 rounded-2xl border border-border bg-card/95 backdrop-blur-xl p-2 shadow-2xl z-50 text-xs glass-chamfer">
                 <div className="px-2 py-1.5 text-muted-foreground font-semibold uppercase tracking-wider text-[10px]">
                   Demo Persona Switcher (ADR D1)
                 </div>

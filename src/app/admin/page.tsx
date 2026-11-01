@@ -230,7 +230,7 @@ export default function AdminCommandCenter() {
         </div>
 
         {/* Tab Controls */}
-        <div className="flex flex-wrap gap-1 p-1 rounded-xl bg-card border border-border">
+        <div className="flex flex-wrap gap-1 p-1.5 rounded-2xl bg-card/90 border border-border/80 glass-chamfer">
           {[
             { id: "COMPLIANCE", label: "Zero-Trust & Landed Cost", icon: ShieldCheck },
             { id: "FINOPS", label: "FinOps & Restocking", icon: Coins },
@@ -243,10 +243,10 @@ export default function AdminCommandCenter() {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id as any)}
-                className={`inline-flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-bold transition-all ${
+                className={`inline-flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-bold transition-all ${
                   isActive
-                    ? "bg-primary text-primary-foreground shadow-sm"
-                    : "text-muted-foreground hover:text-foreground hover:bg-secondary/60"
+                    ? "bg-primary text-primary-foreground shadow-md shadow-primary/25"
+                    : "text-muted-foreground hover:text-foreground hover:bg-secondary/70"
                 }`}
               >
                 <Icon className="w-3.5 h-3.5" />
@@ -755,25 +755,28 @@ export default function AdminCommandCenter() {
               <div className="h-72 w-full pt-4">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={analyticsData.consumptionTrends}>
-                    <CartesianGrid strokeDasharray="3 3" stroke={isDark ? "#334155" : "#e2e8f0"} opacity={0.6} />
-                    <XAxis dataKey="month" stroke={isDark ? "#94a3b8" : "#64748b"} fontSize={12} />
-                    <YAxis stroke={isDark ? "#94a3b8" : "#64748b"} fontSize={12} tickFormatter={(v) => `₹${v / 1000}k`} />
+                    <CartesianGrid strokeDasharray="3 3" stroke={isDark ? "#212C3D" : "#e2e8f0"} opacity={0.6} />
+                    <XAxis dataKey="month" stroke={isDark ? "#94a3b8" : "#64748b"} fontSize={12} tickLine={false} />
+                    <YAxis stroke={isDark ? "#94a3b8" : "#64748b"} fontSize={12} tickLine={false} tickFormatter={(v) => `₹${v / 1000}k`} />
                     <Tooltip
                       formatter={(val: any) => [`₹${Number(val).toLocaleString()}`, ""]}
                       contentStyle={{
-                        backgroundColor: isDark ? "#0f172a" : "#ffffff",
-                        borderColor: isDark ? "#334155" : "#e2e8f0",
-                        borderRadius: "10px",
-                        color: isDark ? "#f8fafc" : "#020817",
-                        boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1)",
+                        backgroundColor: isDark ? "rgba(18, 25, 39, 0.95)" : "#ffffff",
+                        borderColor: isDark ? "rgba(255, 255, 255, 0.1)" : "#e2e8f0",
+                        borderRadius: "12px",
+                        color: isDark ? "#f1f5f9" : "#020817",
+                        boxShadow: isDark
+                          ? "0 20px 25px -5px rgba(0, 0, 0, 0.5), inset 0 1px 0 0 rgba(255, 255, 255, 0.1)"
+                          : "0 10px 15px -3px rgba(0, 0, 0, 0.1)",
+                        backdropFilter: "blur(12px)",
                       }}
-                      itemStyle={{ color: isDark ? "#f8fafc" : "#020817" }}
-                      labelStyle={{ fontWeight: "bold", color: isDark ? "#f8fafc" : "#020817" }}
+                      itemStyle={{ color: isDark ? "#f1f5f9" : "#020817" }}
+                      labelStyle={{ fontWeight: "bold", color: isDark ? "#f1f5f9" : "#020817" }}
                     />
-                    <Legend wrapperStyle={{ paddingTop: "8px", fontSize: "12px" }} />
-                    <Bar dataKey="wholesaleINR" name="Wholesale B2B Cost" fill="#3b82f6" radius={[4, 4, 0, 0]} />
-                    <Bar dataKey="retailAvoidedINR" name="Retail Avoided" fill="#10b981" radius={[4, 4, 0, 0]} />
-                    <Bar dataKey="savingsINR" name="Net Enterprise Savings" fill="#8b5cf6" radius={[4, 4, 0, 0]} />
+                    <Legend wrapperStyle={{ paddingTop: "12px", fontSize: "12px" }} />
+                    <Bar dataKey="wholesaleINR" name="Wholesale B2B Cost" fill="#38bdf8" radius={[6, 6, 0, 0]} />
+                    <Bar dataKey="retailAvoidedINR" name="Retail Avoided" fill="#34d399" radius={[6, 6, 0, 0]} />
+                    <Bar dataKey="savingsINR" name="Net Enterprise Savings" fill="#818cf8" radius={[6, 6, 0, 0]} />
                   </BarChart>
                 </ResponsiveContainer>
               </div>

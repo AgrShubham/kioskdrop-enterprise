@@ -364,7 +364,7 @@ function KioskSimulatorContent() {
           )}
 
           {/* 12-Compartment Grid (3 rows of 4) */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-secondary/30 p-4 rounded-2xl border border-border">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-secondary/30 dark:bg-slate-900/50 p-4 rounded-2xl border border-border/80 glass-chamfer">
             {activeLocker?.compartments.map((comp) => {
               const isReserved = comp.status === "RESERVED_FOR_PICKUP";
               const isDoorOpen = comp.doorPhysicalOpen || comp.status === "DOOR_OPEN_AWAITING_REMOVAL";
@@ -375,16 +375,16 @@ function KioskSimulatorContent() {
               return (
                 <div
                   key={comp.id}
-                  className={`relative p-3.5 rounded-xl border-2 transition-all flex flex-col justify-between min-h-[170px] ${
+                  className={`relative p-3.5 rounded-xl border-2 transition-all flex flex-col justify-between min-h-[170px] glass-chamfer ${
                     isQuarantined
-                      ? "border-destructive bg-destructive/10 animate-pulse-subtle"
+                      ? "border-destructive bg-destructive/10 animate-pulse-subtle dark:shadow-[0_0_15px_rgba(239,68,68,0.2)]"
                       : isDoorOpen
-                      ? "border-sky-500 bg-sky-500/10 shadow-lg shadow-sky-500/10"
+                      ? "border-sky-500 bg-sky-500/10 shadow-lg shadow-sky-500/10 dark:shadow-[0_0_20px_rgba(56,189,248,0.25)]"
                       : isReserved
-                      ? "border-amber-500 bg-amber-500/10 shadow-lg shadow-amber-500/10"
+                      ? "border-amber-500 bg-amber-500/10 shadow-lg shadow-amber-500/10 dark:shadow-[0_0_20px_rgba(245,158,11,0.2)]"
                       : isCheckedOut
-                      ? "border-border/60 bg-secondary/40 text-muted-foreground"
-                      : "border-border bg-card hover:border-border/80"
+                      ? "border-border/60 bg-secondary/30 text-muted-foreground"
+                      : "border-border/80 bg-card/90 hover:border-primary/40 dark:hover:border-primary/50"
                   }`}
                 >
                   {/* Top: Bay Number & Status Indicator */}
@@ -393,7 +393,7 @@ function KioskSimulatorContent() {
                       BAY #{comp.compartmentNumber}
                     </span>
 
-                    <div className="flex items-center gap-1">
+                    <div className="flex items-center gap-1.5">
                       {/* Solenoid Lock Icon */}
                       {comp.solenoidLocked ? (
                         <Lock className="w-3 h-3 text-muted-foreground" />
@@ -401,18 +401,18 @@ function KioskSimulatorContent() {
                         <Unlock className="w-3.5 h-3.5 text-sky-400 animate-bounce" />
                       )}
 
-                      {/* Status LED */}
+                      {/* Status LED with Diffused Glow */}
                       <span
                         className={`w-2 h-2 rounded-full ${
                           isQuarantined
-                            ? "bg-destructive animate-ping"
+                            ? "bg-destructive animate-ping shadow-[0_0_8px_rgba(239,68,68,0.8)]"
                             : isDoorOpen
-                            ? "bg-sky-400 animate-pulse"
+                            ? "bg-sky-400 animate-pulse shadow-[0_0_10px_rgba(56,189,248,0.8)]"
                             : isReserved
-                            ? "bg-amber-400 animate-pulse"
+                            ? "bg-amber-400 animate-pulse shadow-[0_0_10px_rgba(245,158,11,0.8)]"
                             : isCheckedOut
-                            ? "bg-muted-foreground/40"
-                            : "bg-emerald-400"
+                            ? "bg-muted-foreground/30"
+                            : "bg-emerald-400 shadow-[0_0_8px_rgba(16,185,129,0.7)]"
                         }`}
                       />
                     </div>
@@ -508,7 +508,7 @@ function KioskSimulatorContent() {
 
         {/* Right: Tactile Kiosk Keypad & Auth Console (4 cols) */}
         <div className="lg:col-span-4 space-y-6">
-          <div className="p-6 rounded-2xl border border-border bg-card shadow-xl space-y-6">
+          <div className="p-6 rounded-2xl border border-border/80 bg-card/90 backdrop-blur-xl shadow-2xl space-y-6 glass-chamfer dark:shadow-[0_15px_35px_rgba(0,0,0,0.5)]">
             {/* Terminal Top Meta */}
             <div className="flex items-center justify-between pb-3 border-b border-border">
               <div className="flex items-center gap-1.5 text-xs font-bold text-muted-foreground uppercase tracking-wider">
@@ -528,7 +528,7 @@ function KioskSimulatorContent() {
             </div>
 
             {/* PIN Input Display */}
-            <div className="p-4 rounded-xl bg-secondary/80 border border-border text-center space-y-1">
+            <div className="p-4 rounded-xl bg-secondary/80 dark:bg-slate-900/80 border border-border/80 text-center space-y-1 glass-chamfer">
               <div className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider">
                 Enter 6-Digit Reservation OTP
               </div>
@@ -551,10 +551,10 @@ function KioskSimulatorContent() {
                       disabled={isSubmitting}
                       className={`h-12 rounded-xl font-bold text-sm transition-all shadow-sm flex items-center justify-center cursor-pointer active:scale-95 select-none ${
                         isEnter
-                          ? "bg-primary hover:bg-primary/90 text-primary-foreground font-black text-xs"
+                          ? "bg-primary hover:bg-primary/90 text-primary-foreground font-black text-xs shadow-md shadow-primary/30 active:scale-95 glass-chamfer"
                           : isClear
-                          ? "bg-secondary text-muted-foreground hover:text-foreground text-xs"
-                          : "bg-card hover:bg-secondary/80 text-foreground text-base border border-border/80 shadow-xs"
+                          ? "bg-secondary/90 text-muted-foreground hover:text-foreground text-xs active:scale-95 glass-chamfer border border-border/60"
+                          : "bg-card/90 hover:bg-secondary/90 text-foreground text-base border border-border/80 shadow-xs active:scale-95 glass-chamfer"
                       }`}
                     >
                       {btn}
