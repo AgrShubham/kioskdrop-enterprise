@@ -212,67 +212,70 @@ export async function removeAsset(
 
   const activeTicket = compartment.tickets[0];
 
-  await prisma.$transaction(async (tx) => {
-    // 1. Update Compartment: IR beam clear, charging disconnected, solenoid re-latched
-    await tx.lockerCompartment.update({
-      where: { id: compartment.id },
-      data: {
-        status: CompartmentStatus.CHECKED_OUT,
-        solenoidLocked: true,
-        doorPhysicalOpen: false,
-        irSensorBreakBeam: false,
-        chargingConnected: false,
-        activePinHash: null,
-      },
-    });
-
-    // 2. Update Asset availability to OUT
-    await tx.assetItem.update({
-      where: { id: compartment.asset!.id },
-      data: { availability: "OUT" },
-    });
-
-    // 3. Update Ticket to DISPENSED_ACTIVE
-    if (activeTicket) {
-      transitionTicket(activeTicket.status as any, TicketStatus.DISPENSED_ACTIVE);
-      await tx.dispatchTicket.update({
-        where: { id: activeTicket.id },
+  await prisma.$transaction(
+    async (tx) => {
+      // 1. Update Compartment: IR beam clear, charging disconnected, solenoid re-latched
+      await tx.lockerCompartment.update({
+        where: { id: compartment.id },
         data: {
-          status: TicketStatus.DISPENSED_ACTIVE,
-          dispensedAt: new Date(),
+          status: CompartmentStatus.CHECKED_OUT,
+          solenoidLocked: true,
+          doorPhysicalOpen: false,
+          irSensorBreakBeam: false,
+          chargingConnected: false,
+          activePinHash: null,
         },
       });
-    }
 
-    // 4. Log custody event
-    const lastLog = await tx.custodyLog.findFirst({ orderBy: { timestamp: "desc" } });
-    const prevHash = lastLog?.hash || "0".repeat(64);
-    const ts = new Date().toISOString();
-    const details = JSON.stringify({
-      action: "ASSET_REMOVED",
-      bay: compartmentNumber,
-      serialNumber: compartment.asset!.serialNumber,
-    });
-    const hash = crypto
-      .createHash("sha256")
-      .update(`${prevHash}:ASSET_REMOVED:${ts}:${details}`)
-      .digest("hex");
+      // 2. Update Asset availability to OUT
+      await tx.assetItem.update({
+        where: { id: compartment.asset!.id },
+        data: { availability: "OUT" },
+      });
 
-    await tx.custodyLog.create({
-      data: {
-        eventType: "ASSET_REMOVED",
-        ticketId: activeTicket?.id,
-        userId: activeTicket?.userId,
-        assetId: compartment.asset!.id,
-        lockerName: compartment.locker.name,
-        compartmentNumber,
-        authMethod: "SYSTEM",
-        details,
-        prevHash,
-        hash,
-      },
-    });
-  });
+      // 3. Update Ticket to DISPENSED_ACTIVE
+      if (activeTicket) {
+        transitionTicket(activeTicket.status as any, TicketStatus.DISPENSED_ACTIVE);
+        await tx.dispatchTicket.update({
+          where: { id: activeTicket.id },
+          data: {
+            status: TicketStatus.DISPENSED_ACTIVE,
+            dispensedAt: new Date(),
+          },
+        });
+      }
+
+      // 4. Log custody event
+      const lastLog = await tx.custodyLog.findFirst({ orderBy: { timestamp: "desc" } });
+      const prevHash = lastLog?.hash || "0".repeat(64);
+      const ts = new Date().toISOString();
+      const details = JSON.stringify({
+        action: "ASSET_REMOVED",
+        bay: compartmentNumber,
+        serialNumber: compartment.asset!.serialNumber,
+      });
+      const hash = crypto
+        .createHash("sha256")
+        .update(`${prevHash}:ASSET_REMOVED:${ts}:${details}`)
+        .digest("hex");
+
+      await tx.custodyLog.create({
+        data: {
+          eventType: "ASSET_REMOVED",
+          ticketId: activeTicket?.id,
+          userId: activeTicket?.userId,
+          assetId: compartment.asset!.id,
+          lockerName: compartment.locker.name,
+          compartmentNumber,
+          authMethod: "SYSTEM",
+          details,
+          prevHash,
+          hash,
+        },
+      });
+    },
+    { maxWait: 10000, timeout: 15000 }
+  );
 
   return {
     success: true,
@@ -391,71 +394,74 @@ export async function returnAsset(
     : CompartmentStatus.MAINTENANCE_QUARANTINE;
   const targetAssetCondition = isChargingOk ? "HEALTHY" : "NEEDS_INSPECTION";
 
-  await prisma.$transaction(async (tx) => {
-    // 1. Close the ticket
-    transitionTicket(activeTicket.status as any, TicketStatus.RETURNED_CLOSED);
-    await tx.dispatchTicket.update({
-      where: { id: activeTicket.id },
-      data: {
-        status: TicketStatus.RETURNED_CLOSED,
-        returnedAt: new Date(),
-      },
-    });
+  await prisma.$transaction(
+    async (tx) => {
+      // 1. Close the ticket
+      transitionTicket(activeTicket.status as any, TicketStatus.RETURNED_CLOSED);
+      await tx.dispatchTicket.update({
+        where: { id: activeTicket.id },
+        data: {
+          status: TicketStatus.RETURNED_CLOSED,
+          returnedAt: new Date(),
+        },
+      });
 
-    // 2. Update Asset condition & availability
-    await tx.assetItem.update({
-      where: { id: activeTicket.assetId },
-      data: {
-        condition: targetAssetCondition,
-        availability: isChargingOk ? "IN_LOCKER" : "QUARANTINED",
-      },
-    });
+      // 2. Update Asset condition & availability
+      await tx.assetItem.update({
+        where: { id: activeTicket.assetId },
+        data: {
+          condition: targetAssetCondition,
+          availability: isChargingOk ? "IN_LOCKER" : "QUARANTINED",
+        },
+      });
 
-    // 3. Update Locker Compartment
-    await tx.lockerCompartment.update({
-      where: { id: compartment.id },
-      data: {
-        status: targetCompartmentStatus,
-        assetId: activeTicket.assetId,
-        solenoidLocked: true,
-        doorPhysicalOpen: false,
-        irSensorBreakBeam: true,
-        chargingConnected: isChargingOk,
-        activePinHash: null,
-      },
-    });
+      // 3. Update Locker Compartment
+      await tx.lockerCompartment.update({
+        where: { id: compartment.id },
+        data: {
+          status: targetCompartmentStatus,
+          assetId: activeTicket.assetId,
+          solenoidLocked: true,
+          doorPhysicalOpen: false,
+          irSensorBreakBeam: true,
+          chargingConnected: isChargingOk,
+          activePinHash: null,
+        },
+      });
 
-    // 4. Log custody return event
-    const lastLog = await tx.custodyLog.findFirst({ orderBy: { timestamp: "desc" } });
-    const prevHash = lastLog?.hash || "0".repeat(64);
-    const ts = new Date().toISOString();
-    const details = JSON.stringify({
-      action: "ASSET_RETURNED",
-      serialNumber: assetSerialNumber,
-      chargingOk: isChargingOk,
-      compartmentStatus: targetCompartmentStatus,
-      ticketId: activeTicket.id,
-    });
-    const hash = crypto
-      .createHash("sha256")
-      .update(`${prevHash}:ASSET_RETURNED:${ts}:${details}`)
-      .digest("hex");
-
-    await tx.custodyLog.create({
-      data: {
-        eventType: "ASSET_RETURNED",
+      // 4. Log custody return event
+      const lastLog = await tx.custodyLog.findFirst({ orderBy: { timestamp: "desc" } });
+      const prevHash = lastLog?.hash || "0".repeat(64);
+      const ts = new Date().toISOString();
+      const details = JSON.stringify({
+        action: "ASSET_RETURNED",
+        serialNumber: assetSerialNumber,
+        chargingOk: isChargingOk,
+        compartmentStatus: targetCompartmentStatus,
         ticketId: activeTicket.id,
-        userId: activeTicket.userId,
-        assetId: activeTicket.assetId,
-        lockerName: compartment.locker.name,
-        compartmentNumber,
-        authMethod: "SYSTEM",
-        details,
-        prevHash,
-        hash,
-      },
-    });
-  });
+      });
+      const hash = crypto
+        .createHash("sha256")
+        .update(`${prevHash}:ASSET_RETURNED:${ts}:${details}`)
+        .digest("hex");
+
+      await tx.custodyLog.create({
+        data: {
+          eventType: "ASSET_RETURNED",
+          ticketId: activeTicket.id,
+          userId: activeTicket.userId,
+          assetId: activeTicket.assetId,
+          lockerName: compartment.locker.name,
+          compartmentNumber,
+          authMethod: "SYSTEM",
+          details,
+          prevHash,
+          hash,
+        },
+      });
+    },
+    { maxWait: 10000, timeout: 15000 }
+  );
 
   return {
     success: true,
