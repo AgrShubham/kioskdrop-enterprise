@@ -98,13 +98,14 @@ export function Navbar() {
               <Link
                 key={link.href}
                 href={link.href}
-                className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs sm:text-sm font-medium transition-all ${
+                aria-label={link.label}
+                className={`inline-flex items-center justify-center gap-2 p-2 sm:px-3 sm:py-2 min-h-[38px] rounded-xl text-xs sm:text-sm font-medium transition-all ${
                   link.active
                     ? "bg-primary text-primary-foreground shadow-md shadow-primary/25 font-semibold"
                     : "text-muted-foreground hover:text-foreground hover:bg-secondary/70"
                 }`}
               >
-                <Icon className="h-4 w-4" />
+                <Icon className="h-4 w-4 shrink-0" />
                 <span className="hidden md:inline">{link.label}</span>
               </Link>
             );
@@ -133,7 +134,8 @@ export function Navbar() {
           <div className="relative">
             <button
               onClick={() => setDropdownOpen(!dropdownOpen)}
-              className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl border border-border bg-card/90 hover:bg-secondary/80 text-xs sm:text-sm font-medium transition-all shadow-sm glass-chamfer"
+              className="inline-flex items-center gap-2 px-2.5 sm:px-3 py-1.5 sm:py-2 min-h-[38px] rounded-xl border border-border bg-card/90 hover:bg-secondary/80 text-xs sm:text-sm font-medium transition-all shadow-sm glass-chamfer"
+              aria-label="Switch User Persona"
             >
               <div className="h-6 w-6 rounded-full bg-primary/20 text-primary flex items-center justify-center text-xs font-bold">
                 {session?.name.charAt(0) || "U"}

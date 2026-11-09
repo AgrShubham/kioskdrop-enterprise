@@ -204,7 +204,7 @@ function RequestPortalContent() {
                 setSelectedRoomSlug(room.qrCodeSlug);
                 setReservation(null);
               }}
-              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+              className={`px-3 py-2 min-h-[36px] rounded-lg text-xs font-medium transition-all ${
                 selectedRoomSlug === room.qrCodeSlug
                   ? "bg-primary text-primary-foreground shadow-sm"
                   : "text-muted-foreground hover:text-foreground hover:bg-secondary/60"

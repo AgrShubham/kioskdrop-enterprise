@@ -317,7 +317,7 @@ function KioskSimulatorContent() {
         </div>
 
         {/* Locker Location Switcher */}
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           {lockers.map((locker) => (
             <button
               key={locker.id}
@@ -325,7 +325,7 @@ function KioskSimulatorContent() {
                 setSelectedLockerId(locker.id);
                 setKioskMessage(null);
               }}
-              className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all border ${
+              className={`px-3 sm:px-4 py-2 min-h-[38px] rounded-xl text-xs sm:text-sm font-bold transition-all border ${
                 selectedLockerId === locker.id
                   ? "bg-primary text-primary-foreground border-primary shadow-md shadow-primary/20"
                   : "bg-card border-border text-muted-foreground hover:text-foreground"
@@ -343,8 +343,8 @@ function KioskSimulatorContent() {
         <div className="lg:col-span-8 space-y-4">
           {/* Locker Status Bar */}
           {activeLocker && (
-            <div className="flex items-center justify-between px-4 py-3 rounded-xl border border-border bg-card text-xs">
-              <div className="flex items-center gap-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 px-4 py-3 rounded-xl border border-border bg-card text-xs">
+              <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
                 <span className="font-bold text-foreground">
                   {activeLocker.name}
                 </span>

@@ -15,7 +15,10 @@
     "db:generate": "prisma generate",
     "db:seed": "tsx prisma/seed.ts",
     "db:studio": "prisma studio",
-    "sync:history": "node scripts/sync-chat-history.js"
+    "sync:history": "node scripts/sync-chat-history.js",
+    "record:video": "node scripts/record-demo-video.js",
+    "demo:voiceover": "python scripts/generate-ai-voiceover.py",
+    "record:synced": "node scripts/record-synced-video.js"
   },
   "dependencies": {
     "@neon/config": "^1.10.0",

@@ -243,7 +243,7 @@ export default function AdminCommandCenter() {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id as any)}
-                className={`inline-flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-bold transition-all ${
+                className={`inline-flex items-center gap-2 px-3 py-2 min-h-[38px] rounded-xl text-xs font-bold transition-all ${
                   isActive
                     ? "bg-primary text-primary-foreground shadow-md shadow-primary/25"
                     : "text-muted-foreground hover:text-foreground hover:bg-secondary/70"
@@ -266,16 +266,16 @@ export default function AdminCommandCenter() {
               You are currently viewing as <strong>Aarav Sharma (EMPLOYEE)</strong>. Some administrative write controls are restricted by server-side RBAC.
             </span>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <button
               onClick={() => switchPersona("IT_ADMIN")}
-              className="px-3 py-1 rounded-lg bg-amber-500 text-black font-bold text-xs hover:bg-amber-400 transition-colors cursor-pointer"
+              className="px-3 py-1.5 min-h-[36px] rounded-lg bg-amber-500 text-black font-bold text-xs hover:bg-amber-400 transition-colors cursor-pointer"
             >
               Switch to IT Admin (Priya Patel)
             </button>
             <button
               onClick={() => switchPersona("FINOPS_AUDITOR")}
-              className="px-3 py-1 rounded-lg bg-secondary text-foreground font-bold text-xs hover:bg-secondary/80 transition-colors border border-border cursor-pointer"
+              className="px-3 py-1.5 min-h-[36px] rounded-lg bg-secondary text-foreground font-bold text-xs hover:bg-secondary/80 transition-colors border border-border cursor-pointer"
             >
               Switch to FinOps (Vikram)
             </button>
@@ -288,7 +288,7 @@ export default function AdminCommandCenter() {
         <div className="space-y-8">
           {/* Top Half: Interactive Statutory Landed-Cost Calculator */}
           <div className="p-6 rounded-2xl border border-border bg-card shadow-lg space-y-6">
-            <div className="flex items-center justify-between border-b border-border pb-3">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-border pb-3">
               <div>
                 <div className="text-xs font-bold uppercase tracking-wider text-primary">
                   Indian Customs Tariff Engine (ADR D6)
@@ -423,7 +423,7 @@ export default function AdminCommandCenter() {
 
           {/* Bottom Half: Endpoint Cybersecurity Whitelist Manager */}
           <div className="p-6 rounded-2xl border border-border bg-card shadow-lg space-y-4">
-            <div className="flex items-center justify-between border-b border-border pb-3">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 border-b border-border pb-3">
               <div>
                 <div className="text-xs font-bold uppercase tracking-wider text-primary">
                   Zero-Trust Asset Registry
@@ -789,7 +789,7 @@ export default function AdminCommandCenter() {
       {activeTab === "WEBHOOKS" && (
         <div className="space-y-6">
           <div className="p-6 rounded-2xl border border-border bg-card shadow-lg space-y-4">
-            <div className="flex items-center justify-between border-b border-border pb-3">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 border-b border-border pb-3">
               <div>
                 <div className="text-xs font-bold uppercase tracking-wider text-primary">
                   ITSM Integration Monitor
