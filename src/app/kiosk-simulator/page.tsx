@@ -68,15 +68,28 @@ interface Locker {
 
 function KioskSimulatorContent() {
   const searchParams = useSearchParams();
+  const urlLocker = searchParams.get("locker");
+  const urlPin = searchParams.get("pin");
 
   const [lockers, setLockers] = useState<Locker[]>([]);
-  const [selectedLockerId, setSelectedLockerId] = useState<string>("lkr_floor4");
-  const [pinInput, setPinInput] = useState<string>(searchParams.get("pin") || "");
+  const [isLoadingLockers, setIsLoadingLockers] = useState<boolean>(true);
+  const [lockerLoadError, setLockerLoadError] = useState<string | null>(null);
+  const [selectedLockerId, setSelectedLockerId] = useState<string>(
+    urlLocker || "lkr_floor4"
+  );
+  const [pinInput, setPinInput] = useState<string>(
+    (urlPin || "").replace(/\D/g, "").slice(0, 6)
+  );
   const [soundEnabled, setSoundEnabled] = useState<boolean>(true);
   const [kioskMessage, setKioskMessage] = useState<string | null>(null);
   const [isError, setIsError] = useState<boolean>(false);
   const [activeSession, setActiveSession] = useState<any>(null);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (urlLocker) setSelectedLockerId(urlLocker);
+    if (urlPin) setPinInput(urlPin.replace(/\D/g, "").slice(0, 6));
+  }, [urlLocker, urlPin]);
 
   // Play synthetic tactile click sound
   const playClickSound = () => {
@@ -101,11 +114,26 @@ function KioskSimulatorContent() {
   // Fetch initial lockers state and session
   const refreshLockers = () => {
     fetch("/api/lockers")
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.lockers) setLockers(data.lockers);
+      .then(async (res) => {
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok || !data.lockers) {
+          throw new Error(
+            data.error?.message || "Unable to load smart locker inventory."
+          );
+        }
+        setLockers(data.lockers);
+        setLockerLoadError(null);
       })
-      .catch(() => {});
+      .catch((err) => {
+        setLockerLoadError(
+          err instanceof Error
+            ? err.message
+            : "Unable to connect to smart locker controller."
+        );
+      })
+      .finally(() => {
+        setIsLoadingLockers(false);
+      });
   };
 
   useEffect(() => {
@@ -130,17 +158,35 @@ function KioskSimulatorContent() {
     playClickSound();
     if (val === "CLEAR") {
       setPinInput("");
+      if (isError) {
+        setKioskMessage(null);
+        setIsError(false);
+      }
     } else if (val === "ENTER") {
       handlePinUnlock();
     } else {
       if (pinInput.length < 6) {
         setPinInput((prev) => prev + val);
+        if (isError) {
+          setKioskMessage(null);
+          setIsError(false);
+        }
       }
     }
   };
 
   const handlePinUnlock = async () => {
-    if (!activeLocker || pinInput.length !== 6) {
+    if (!activeLocker) {
+      setKioskMessage(
+        isLoadingLockers
+          ? "Connecting to smart locker controller. Please wait a moment and try again."
+          : lockerLoadError || "Smart locker controller unavailable. Please refresh the terminal."
+      );
+      setIsError(true);
+      return;
+    }
+
+    if (!/^\d{6}$/.test(pinInput)) {
       setKioskMessage("Please enter a valid 6-digit PIN.");
       setIsError(true);
       return;
@@ -180,7 +226,20 @@ function KioskSimulatorContent() {
   };
 
   const handleRfidTap = async () => {
-    if (!activeLocker || !activeSession) return;
+    if (!activeLocker) {
+      setKioskMessage(
+        isLoadingLockers
+          ? "Connecting to smart locker controller. Please wait a moment and try again."
+          : lockerLoadError || "Smart locker controller unavailable. Please refresh the terminal."
+      );
+      setIsError(true);
+      return;
+    }
+    if (!activeSession) {
+      setKioskMessage("Active employee session not loaded yet. Please try again.");
+      setIsError(true);
+      return;
+    }
     setIsSubmitting(true);
     setKioskMessage(null);
     setIsError(false);
@@ -364,8 +423,28 @@ function KioskSimulatorContent() {
           )}
 
           {/* 12-Compartment Grid (3 rows of 4) */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-secondary/30 dark:bg-slate-900/50 p-4 rounded-2xl border border-border/80 glass-chamfer">
-            {activeLocker?.compartments.map((comp) => {
+          {!activeLocker && isLoadingLockers ? (
+            <div className="p-8 rounded-2xl border border-border/80 bg-secondary/30 dark:bg-slate-900/50 text-center text-xs text-muted-foreground glass-chamfer">
+              Connecting to Smart Locker controller...
+            </div>
+          ) : !activeLocker && lockerLoadError ? (
+            <div className="p-6 rounded-2xl border border-destructive/30 bg-destructive/10 text-center space-y-3">
+              <div className="text-xs font-semibold text-destructive">
+                {lockerLoadError}
+              </div>
+              <button
+                onClick={() => {
+                  setIsLoadingLockers(true);
+                  refreshLockers();
+                }}
+                className="px-3 py-1.5 rounded-lg bg-primary text-primary-foreground text-xs font-bold hover:bg-primary/90 transition-colors cursor-pointer"
+              >
+                Retry Connection
+              </button>
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-secondary/30 dark:bg-slate-900/50 p-4 rounded-2xl border border-border/80 glass-chamfer">
+              {activeLocker?.compartments.map((comp) => {
               const isReserved = comp.status === "RESERVED_FOR_PICKUP";
               const isDoorOpen = comp.doorPhysicalOpen || comp.status === "DOOR_OPEN_AWAITING_REMOVAL";
               const isCheckedOut = comp.status === "CHECKED_OUT";
@@ -500,10 +579,11 @@ function KioskSimulatorContent() {
                       </button>
                     </div>
                   )}
-                </div>
-              );
-            })}
-          </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </div>
 
         {/* Right: Tactile Kiosk Keypad & Auth Console (4 cols) */}
@@ -548,8 +628,8 @@ function KioskSimulatorContent() {
                     <button
                       key={btn}
                       onClick={() => handleKeypadPress(btn)}
-                      disabled={isSubmitting}
-                      className={`h-12 rounded-xl font-bold text-sm transition-all shadow-sm flex items-center justify-center cursor-pointer active:scale-95 select-none ${
+                      disabled={isSubmitting || (isEnter && isLoadingLockers)}
+                      className={`h-12 rounded-xl font-bold text-sm transition-all shadow-sm flex items-center justify-center cursor-pointer active:scale-95 select-none disabled:opacity-50 disabled:cursor-not-allowed ${
                         isEnter
                           ? "bg-primary hover:bg-primary/90 text-primary-foreground font-black text-xs shadow-md shadow-primary/30 active:scale-95 glass-chamfer"
                           : isClear
@@ -571,8 +651,8 @@ function KioskSimulatorContent() {
               </div>
               <button
                 onClick={handleRfidTap}
-                disabled={isSubmitting}
-                className="w-full py-2.5 px-3 rounded-xl bg-secondary/80 hover:bg-secondary border border-border text-foreground font-bold text-xs transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm"
+                disabled={isSubmitting || isLoadingLockers}
+                className="w-full py-2.5 px-3 rounded-xl bg-secondary/80 hover:bg-secondary border border-border text-foreground font-bold text-xs transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <CreditCard className="w-4 h-4 text-primary" />
                 <span>Tap Corporate RFID Badge ({activeSession?.rfidBadgeId || "RFID-EMP-8821"})</span>
