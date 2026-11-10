@@ -22,3 +22,5 @@ test-results/
 .neon
 .vercel
 .env*
+.mobile_audit/
+recordings/
