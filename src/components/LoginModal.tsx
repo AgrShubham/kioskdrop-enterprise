@@ -32,7 +32,7 @@ const DEMO_PERSONAS = [
     email: "aarav.sharma@enterprise.corp",
     department: "Sales & Strategic Accounts",
     rfidBadgeId: "RFID-EMP-8821",
-    badgeColor: "border-blue-500/40 bg-blue-500/10 text-blue-400",
+    badgeColor: "border-blue-500/40 bg-blue-500/10 text-blue-500",
     description: "Rapid AV Request, QR Scanning & Locker Pickup",
   },
   {
@@ -41,7 +41,7 @@ const DEMO_PERSONAS = [
     email: "priya.patel@enterprise.corp",
     department: "Enterprise Infrastructure & AV Ops",
     rfidBadgeId: "RFID-IT-0042",
-    badgeColor: "border-emerald-500/40 bg-emerald-500/10 text-emerald-400",
+    badgeColor: "border-emerald-500/40 bg-emerald-500/10 text-emerald-500",
     description: "Full Superuser: USB Zero-Trust, POs & Webhooks",
   },
   {
@@ -50,7 +50,7 @@ const DEMO_PERSONAS = [
     email: "vikram.malhotra@enterprise.corp",
     department: "Corporate Procurement & FinOps",
     rfidBadgeId: "RFID-FIN-1109",
-    badgeColor: "border-amber-500/40 bg-amber-500/10 text-amber-400",
+    badgeColor: "border-amber-500/40 bg-amber-500/10 text-amber-500",
     description: "Read-Only Indian Customs Duty & Card Audits",
   },
 ];
@@ -67,7 +67,6 @@ export function LoginModal({ isOpen, onClose, onSuccess }: LoginModalProps) {
 
   useEffect(() => {
     if (isOpen) {
-      // Test server latency on open
       const start = performance.now();
       fetch("/api/session/current")
         .then(() => {
@@ -106,28 +105,28 @@ export function LoginModal({ isOpen, onClose, onSuccess }: LoginModalProps) {
     <div
       role="dialog"
       aria-modal="true"
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-md p-4 animate-in fade-in duration-200"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 dark:bg-black/75 backdrop-blur-md p-4 animate-in fade-in duration-200"
     >
-      <div className="relative w-full max-w-lg rounded-3xl bg-[#0F172A] border border-slate-700/80 shadow-2xl p-6 sm:p-8 text-white glass-chamfer">
+      <div className="relative w-full max-w-lg rounded-3xl bg-card border border-border shadow-2xl p-6 sm:p-8 text-foreground glass-chamfer">
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-5 right-5 p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
+          className="absolute top-5 right-5 p-2 rounded-xl text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
         >
           <X className="w-5 h-5" />
         </button>
 
         {/* Header */}
         <div className="flex items-center gap-3 mb-6">
-          <div className="w-10 h-10 rounded-xl bg-slate-900 border border-slate-700 flex items-center justify-center p-2">
-            <KioskDropLogo variant="icon" className="w-full h-full text-white" />
+          <div className="w-10 h-10 rounded-xl bg-secondary border border-border flex items-center justify-center p-2">
+            <KioskDropLogo variant="icon" className="w-full h-full text-foreground" />
           </div>
           <div>
-            <h2 className="text-lg font-bold">Enterprise Authentication</h2>
-            <div className="flex items-center gap-2 text-xs text-slate-400">
+            <h2 className="text-lg font-bold text-foreground">Enterprise Authentication</h2>
+            <div className="flex items-center gap-2 text-xs text-muted-foreground">
               <span>Zero-Trust Gateway v1.0.3</span>
               {pingLatency !== null && (
-                <span className="inline-flex items-center gap-1 text-emerald-400 font-mono text-[10px]">
+                <span className="inline-flex items-center gap-1 text-emerald-600 dark:text-emerald-400 font-mono text-[10px]">
                   <Wifi className="w-3 h-3" /> {pingLatency}ms
                 </span>
               )}
@@ -136,13 +135,13 @@ export function LoginModal({ isOpen, onClose, onSuccess }: LoginModalProps) {
         </div>
 
         {/* Mode Tabs */}
-        <div className="grid grid-cols-3 gap-1 bg-slate-900/80 p-1 rounded-2xl border border-slate-800 mb-6 text-xs font-semibold">
+        <div className="grid grid-cols-3 gap-1 bg-secondary/80 p-1 rounded-2xl border border-border mb-6 text-xs font-semibold">
           <button
             onClick={() => setActiveTab("credentials")}
             className={`py-2 rounded-xl transition-all ${
               activeTab === "credentials"
-                ? "bg-blue-600 text-white shadow-md"
-                : "text-slate-400 hover:text-white"
+                ? "bg-primary text-primary-foreground shadow-md"
+                : "text-muted-foreground hover:text-foreground"
             }`}
           >
             Credentials
@@ -151,8 +150,8 @@ export function LoginModal({ isOpen, onClose, onSuccess }: LoginModalProps) {
             onClick={() => setActiveTab("demo")}
             className={`py-2 rounded-xl transition-all ${
               activeTab === "demo"
-                ? "bg-blue-600 text-white shadow-md"
-                : "text-slate-400 hover:text-white"
+                ? "bg-primary text-primary-foreground shadow-md"
+                : "text-muted-foreground hover:text-foreground"
             }`}
           >
             1-Tap Demo
@@ -161,8 +160,8 @@ export function LoginModal({ isOpen, onClose, onSuccess }: LoginModalProps) {
             onClick={() => setActiveTab("rfid")}
             className={`py-2 rounded-xl transition-all ${
               activeTab === "rfid"
-                ? "bg-blue-600 text-white shadow-md"
-                : "text-slate-400 hover:text-white"
+                ? "bg-primary text-primary-foreground shadow-md"
+                : "text-muted-foreground hover:text-foreground"
             }`}
           >
             RFID Tap
@@ -171,7 +170,7 @@ export function LoginModal({ isOpen, onClose, onSuccess }: LoginModalProps) {
 
         {/* Error Alert */}
         {errorMsg && (
-          <div className="mb-4 p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-400 text-xs flex items-center gap-2">
+          <div className="mb-4 p-3 rounded-xl bg-destructive/10 border border-destructive/30 text-destructive text-xs flex items-center gap-2">
             <AlertTriangle className="w-4 h-4 shrink-0" />
             <span>{errorMsg}</span>
           </div>
@@ -187,40 +186,40 @@ export function LoginModal({ isOpen, onClose, onSuccess }: LoginModalProps) {
             className="space-y-4"
           >
             <div>
-              <label className="block text-xs font-medium text-slate-300 mb-1.5">
+              <label className="block text-xs font-medium text-foreground mb-1.5">
                 Corporate Email Address
               </label>
               <div className="relative">
-                <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                 <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
                   placeholder="employee@enterprise.corp"
-                  className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white focus:outline-none focus:border-blue-500"
+                  className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-secondary/60 border border-border text-xs text-foreground focus:outline-none focus:border-primary"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-slate-300 mb-1.5">
+              <label className="block text-xs font-medium text-foreground mb-1.5">
                 Directory Password
               </label>
               <div className="relative">
-                <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                 <input
                   type={showPassword ? "text" : "password"}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
                   placeholder="••••••••"
-                  className="w-full pl-10 pr-10 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white focus:outline-none focus:border-blue-500"
+                  className="w-full pl-10 pr-10 py-2.5 rounded-xl bg-secondary/60 border border-border text-xs text-foreground focus:outline-none focus:border-primary"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-200"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
                 >
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
@@ -230,7 +229,7 @@ export function LoginModal({ isOpen, onClose, onSuccess }: LoginModalProps) {
             <button
               type="submit"
               disabled={loading}
-              className="w-full mt-2 py-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold transition-all shadow-lg shadow-blue-500/25 flex items-center justify-center gap-2 disabled:opacity-50"
+              className="w-full mt-2 py-3 rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground text-xs font-bold transition-all shadow-lg shadow-primary/25 flex items-center justify-center gap-2 disabled:opacity-50"
             >
               {loading ? "Authorizing Identity..." : "Sign In with Enterprise Directory"}
               <ArrowRight className="w-4 h-4" />
@@ -241,7 +240,7 @@ export function LoginModal({ isOpen, onClose, onSuccess }: LoginModalProps) {
         {/* Tab 2: 1-Tap Quick Demo */}
         {activeTab === "demo" && (
           <div className="space-y-3">
-            <p className="text-xs text-slate-400 mb-2">
+            <p className="text-xs text-muted-foreground mb-2">
               Select an enterprise persona to authenticate instantly with appropriate role permissions:
             </p>
             {DEMO_PERSONAS.map((p) => (
@@ -249,21 +248,21 @@ export function LoginModal({ isOpen, onClose, onSuccess }: LoginModalProps) {
                 key={p.role}
                 onClick={() => handleLogin({ role: p.role })}
                 disabled={loading}
-                className="w-full p-3.5 rounded-2xl bg-slate-900 hover:bg-slate-800 border border-slate-700/80 hover:border-blue-500/50 transition-all text-left flex items-start justify-between group"
+                className="w-full p-3.5 rounded-2xl bg-secondary/40 hover:bg-secondary border border-border hover:border-primary/50 transition-all text-left flex items-start justify-between group"
               >
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="font-bold text-xs text-white">{p.name}</span>
+                    <span className="font-bold text-xs text-foreground">{p.name}</span>
                     <span
                       className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-md border ${p.badgeColor}`}
                     >
                       {p.role}
                     </span>
                   </div>
-                  <div className="text-[11px] text-slate-400 mt-1">{p.department}</div>
-                  <div className="text-[10px] text-slate-500 mt-0.5">{p.description}</div>
+                  <div className="text-[11px] text-muted-foreground mt-1">{p.department}</div>
+                  <div className="text-[10px] text-muted-foreground/70 mt-0.5">{p.description}</div>
                 </div>
-                <ArrowRight className="w-4 h-4 text-slate-500 group-hover:text-blue-400 group-hover:translate-x-1 transition-all mt-1" />
+                <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all mt-1" />
               </button>
             ))}
           </div>
@@ -272,11 +271,11 @@ export function LoginModal({ isOpen, onClose, onSuccess }: LoginModalProps) {
         {/* Tab 3: RFID Badge Reader Simulation */}
         {activeTab === "rfid" && (
           <div className="space-y-4 text-center">
-            <div className="relative mx-auto w-24 h-24 rounded-full bg-slate-900 border border-slate-700 flex items-center justify-center">
+            <div className="relative mx-auto w-24 h-24 rounded-full bg-secondary border border-border flex items-center justify-center">
               <div className="absolute inset-0 rounded-full border border-dashed border-sky-400/40 animate-[spin_10s_linear_infinite]" />
-              <Radio className="w-10 h-10 text-sky-400 animate-pulse" />
+              <Radio className="w-10 h-10 text-sky-500 animate-pulse" />
             </div>
-            <p className="text-xs text-slate-400 max-w-xs mx-auto">
+            <p className="text-xs text-muted-foreground max-w-xs mx-auto">
               Simulate tapping an employee physical NFC/RFID badge against the kiosk reader:
             </p>
 
@@ -286,12 +285,12 @@ export function LoginModal({ isOpen, onClose, onSuccess }: LoginModalProps) {
                 value={rfidInput}
                 onChange={(e) => setRfidInput(e.target.value)}
                 placeholder="RFID-EMP-8821"
-                className="flex-1 px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs font-mono text-center text-sky-400 focus:outline-none focus:border-blue-500"
+                className="flex-1 px-3 py-2 rounded-xl bg-secondary/60 border border-border text-xs font-mono text-center text-primary focus:outline-none focus:border-primary"
               />
               <button
                 onClick={() => handleLogin({ rfidBadgeId: rfidInput })}
                 disabled={loading}
-                className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold transition-all"
+                className="px-4 py-2 rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground text-xs font-bold transition-all shadow-md"
               >
                 Tap Badge
               </button>
@@ -305,7 +304,7 @@ export function LoginModal({ isOpen, onClose, onSuccess }: LoginModalProps) {
                     setRfidInput(p.rfidBadgeId);
                     handleLogin({ rfidBadgeId: p.rfidBadgeId });
                   }}
-                  className="text-[10px] font-mono px-2 py-1 rounded bg-slate-800 text-slate-300 hover:text-white border border-slate-700"
+                  className="text-[10px] font-mono px-2 py-1 rounded bg-secondary text-foreground hover:bg-secondary/80 border border-border"
                 >
                   {p.rfidBadgeId}
                 </button>
@@ -317,4 +316,3 @@ export function LoginModal({ isOpen, onClose, onSuccess }: LoginModalProps) {
     </div>
   );
 }
-

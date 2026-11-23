@@ -25,3 +25,4 @@ test-results/
 .mobile_audit/
 recordings/
 *.apk
+.ui_audit_screenshots/

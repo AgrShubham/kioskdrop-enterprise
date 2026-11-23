@@ -214,18 +214,18 @@ export default function AdminCommandCenter() {
   // Strict 403 Forbidden Access Violation for EMPLOYEE persona (Section 6.2)
   if (session && session.role === "EMPLOYEE") {
     return (
-      <main className="min-h-[calc(100vh-4rem)] flex items-center justify-center p-6 bg-[#070A10] text-white">
-        <div className="w-full max-w-md p-8 rounded-3xl bg-[#0F172A] border border-rose-500/40 text-center glass-chamfer shadow-2xl shadow-rose-500/10">
+      <main className="min-h-[calc(100vh-4rem)] flex items-center justify-center p-6 bg-background text-foreground transition-colors duration-200">
+        <div className="w-full max-w-md p-8 rounded-3xl bg-card border border-rose-500/40 text-center glass-chamfer shadow-2xl shadow-rose-500/10">
           <div className="w-16 h-16 rounded-2xl bg-rose-500/10 border border-rose-500/30 text-rose-500 flex items-center justify-center mx-auto mb-5">
             <ShieldAlert className="w-8 h-8" />
           </div>
           <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-rose-500/10 border border-rose-500/30 text-rose-400 text-[10px] font-mono font-bold uppercase mb-3">
             SEC_ERR_403_INSUFFICIENT_PRIVILEGE
           </div>
-          <h2 className="text-xl font-extrabold mb-2">Access Denied: ITAM Restricted</h2>
-          <p className="text-xs text-slate-400 leading-relaxed mb-6">
-            Your current session <span className="font-semibold text-white">({session.name})</span> is assigned role{" "}
-            <span className="font-mono text-blue-400">EMPLOYEE</span>. Access to Zero-Trust VID/PID Whitelists and FinOps Ledgers is restricted to IT Administrators and Auditors.
+          <h2 className="text-xl font-extrabold mb-2 text-foreground">Access Denied: ITAM Restricted</h2>
+          <p className="text-xs text-muted-foreground leading-relaxed mb-6">
+            Your current session <span className="font-semibold text-foreground">({session.name})</span> is assigned role{" "}
+            <span className="font-mono text-primary font-bold">EMPLOYEE</span>. Access to Zero-Trust VID/PID Whitelists and FinOps Ledgers is restricted to IT Administrators and Auditors.
           </p>
           <div className="flex flex-col gap-2.5">
             <button

@@ -19,7 +19,7 @@ export function WebSplashScreen({
   onFinish,
   minDurationMs = 1750,
 }: WebSplashScreenProps) {
-  const [isVisible, setIsVisible] = useState(true);
+  const [isVisible, setIsVisible] = useState(false);
   const [stage, setStage] = useState<1 | 2 | 3 | 4>(1);
   const [logIndex, setLogIndex] = useState(0);
   const [isDismissing, setIsDismissing] = useState(false);
@@ -47,11 +47,12 @@ export function WebSplashScreen({
     // Check if boot was already displayed in this browser tab
     try {
       if (sessionStorage.getItem("kioskdrop_boot_shown") === "true") {
-        setIsVisible(false);
         onFinish?.();
         return;
       }
     } catch {}
+
+    setIsVisible(true);
 
     // Stage 1 -> 2: Chevron Drop Flash
     const t1 = setTimeout(() => setStage(2), 380);
