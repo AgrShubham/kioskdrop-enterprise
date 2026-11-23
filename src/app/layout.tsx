@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { Navbar } from "@/components/Navbar";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import { WebSplashScreen } from "@/components/WebSplashScreen";
 
 export const metadata: Metadata = {
   title: "KioskDrop Enterprise | Automated Conference Kit Smart-Locker",
@@ -36,6 +37,7 @@ export default function RootLayout({
       </head>
       <body className="min-h-screen bg-background text-foreground antialiased flex flex-col transition-colors duration-200">
         <ThemeProvider>
+          <WebSplashScreen />
           <Navbar />
           <div className="flex-1">{children}</div>
         </ThemeProvider>

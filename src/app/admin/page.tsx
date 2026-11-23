@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import Link from "next/link";
 import {
   ShieldCheck,
   ShieldAlert,
@@ -210,8 +211,42 @@ export default function AdminCommandCenter() {
     window.location.reload();
   };
 
-  // RBAC Banner for Employees
-  const isEmployee = session?.role === "EMPLOYEE";
+  // Strict 403 Forbidden Access Violation for EMPLOYEE persona (Section 6.2)
+  if (session && session.role === "EMPLOYEE") {
+    return (
+      <main className="min-h-[calc(100vh-4rem)] flex items-center justify-center p-6 bg-[#070A10] text-white">
+        <div className="w-full max-w-md p-8 rounded-3xl bg-[#0F172A] border border-rose-500/40 text-center glass-chamfer shadow-2xl shadow-rose-500/10">
+          <div className="w-16 h-16 rounded-2xl bg-rose-500/10 border border-rose-500/30 text-rose-500 flex items-center justify-center mx-auto mb-5">
+            <ShieldAlert className="w-8 h-8" />
+          </div>
+          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-rose-500/10 border border-rose-500/30 text-rose-400 text-[10px] font-mono font-bold uppercase mb-3">
+            SEC_ERR_403_INSUFFICIENT_PRIVILEGE
+          </div>
+          <h2 className="text-xl font-extrabold mb-2">Access Denied: ITAM Restricted</h2>
+          <p className="text-xs text-slate-400 leading-relaxed mb-6">
+            Your current session <span className="font-semibold text-white">({session.name})</span> is assigned role{" "}
+            <span className="font-mono text-blue-400">EMPLOYEE</span>. Access to Zero-Trust VID/PID Whitelists and FinOps Ledgers is restricted to IT Administrators and Auditors.
+          </p>
+          <div className="flex flex-col gap-2.5">
+            <button
+              onClick={() => switchPersona("IT_ADMIN")}
+              className="w-full py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition-all shadow-lg shadow-emerald-600/20"
+            >
+              Escalate to IT Admin Persona (Priya Patel)
+            </button>
+            <Link
+              href="/request?room=Boardroom-4B&floor=4"
+              className="w-full py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-xs font-semibold border border-slate-700 transition-colors"
+            >
+              Return to Rapid-Drop Portal
+            </Link>
+          </div>
+        </div>
+      </main>
+    );
+  }
+
+  const isEmployee = false;
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8 space-y-8">
