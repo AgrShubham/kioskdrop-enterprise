@@ -1,0 +1,111 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "brand": {
+    "name": "KioskDrop Enterprise",
+    "slug": "kioskdrop-enterprise",
+    "tagline": "Zero-Trust Hardware Access & Fleet Gateway",
+    "version": "1.0.3"
+  },
+  "geometry": {
+    "grid": "1000x1000 standard bounding box",
+    "canvasPadding": 60,
+    "elements": {
+      "kStem": {
+        "x": 155,
+        "y": 322,
+        "width": 69,
+        "height": 356,
+        "description": "Solid vertical foundation pillar representing physical locker bay infrastructure."
+      },
+      "kUpperDiagonal": {
+        "polygon": [[224, 322], [328, 322], [472, 494], [376, 506]],
+        "angleDeg": 45.0,
+        "description": "Upper kinetic ascent wing."
+      },
+      "kLowerDiagonal": {
+        "polygon": [[262, 497], [354, 492], [472, 678], [376, 678]],
+        "angleDeg": 45.0,
+        "description": "Lower kinetic dispatch wing."
+      },
+      "dividerBar": {
+        "x": 500,
+        "y": 322,
+        "width": 69,
+        "height": 356,
+        "description": "Zero-Trust isolation bar separating user request from automated locker delivery."
+      },
+      "dropChevron": {
+        "polygon": [[597, 322], [701, 322], [845, 500], [701, 678], [597, 678], [741, 500]],
+        "angleDeg": 45.0,
+        "description": "Forward drop chevron representing instant locker compartment solenoid dispatch."
+      }
+    }
+  },
+  "colors": {
+    "primary": {
+      "obsidianDark": {
+        "hex": "#070A10",
+        "rgb": "rgb(7, 10, 16)",
+        "hsl": "hsl(220, 39%, 5%)",
+        "usage": "Master background for dark theme, splash screen, and terminal displays."
+      },
+      "slateCard": {
+        "hex": "#0F172A",
+        "rgb": "rgb(15, 23, 42)",
+        "hsl": "hsl(222, 47%, 11%)",
+        "usage": "Elevated bento cards, modal sheets, and keypads."
+      },
+      "pureWhite": {
+        "hex": "#FFFFFF",
+        "rgb": "rgb(255, 255, 255)",
+        "hsl": "hsl(0, 0%, 100%)",
+        "usage": "Light theme background and dark theme high-contrast typography."
+      }
+    },
+    "accents": {
+      "sapphireBlue": {
+        "hex": "#2563EB",
+        "rgb": "rgb(37, 99, 235)",
+        "hsl": "hsl(221, 83%, 53%)",
+        "usage": "Primary brand accent, active interactive controls, and Employee persona badge."
+      },
+      "cyberSky": {
+        "hex": "#38BDF8",
+        "rgb": "rgb(56, 189, 248)",
+        "hsl": "hsl(199, 95%, 64%)",
+        "usage": "Kinetic chevron flash, glowing pulse rings, and telemetry sync indicator."
+      },
+      "emeraldZeroTrust": {
+        "hex": "#10B981",
+        "rgb": "rgb(16, 185, 129)",
+        "hsl": "hsl(160, 84%, 39%)",
+        "usage": "Solenoid unlocked status, stock ready, and IT Admin persona badge."
+      },
+      "amberQuarantine": {
+        "hex": "#F59E0B",
+        "rgb": "rgb(245, 158, 11)",
+        "hsl": "hsl(38, 92%, 50%)",
+        "usage": "Pending reception, active reservation timer, and FinOps Auditor persona badge."
+      },
+      "crimsonAlarm": {
+        "hex": "#EF4444",
+        "rgb": "rgb(239, 68, 68)",
+        "hsl": "hsl(0, 84%, 60%)",
+        "usage": "Hardware tamper alarm, BadUSB rogue device, and 403 access denial."
+      }
+    }
+  },
+  "typography": {
+    "primaryFont": "Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+    "monoFont": "JetBrains Mono, 'Fira Code', Menlo, Consolas, monospace",
+    "weights": {
+      "regular": 400,
+      "medium": 500,
+      "semibold": 600,
+      "bold": 700,
+      "extrabold": 800,
+      "black": 900
+    }
+  }
+}
+

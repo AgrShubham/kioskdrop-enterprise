@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 360" fill="none">
+  <defs>
+    <linearGradient id="kd-h-cyan" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38BDF8" />
+      <stop offset="100%" stop-color="#2563EB" />
+    </linearGradient>
+  </defs>
+  <g transform="translate(40, 20) scale(0.85)">
+    <g transform="translate(-130, -290)">
+      <path d="M 155,323 L 224,323 L 224,475 L 376,323 L 472,323 L 298,497 L 298,503 L 472,677 L 376,677 L 224,525 L 224,677 L 155,677 Z" fill="#090D16" />
+      <rect x="500" y="323" width="69" height="354" fill="#090D16" />
+      <path d="M 597,323 L 688,323 L 845,500 L 688,677 L 597,677 L 754,500 Z" fill="url(#kd-h-cyan)" />
+    </g>
+  </g>
+  <text x="680" y="195" font-family="system-ui, -apple-system, 'Inter', 'Segoe UI', Roboto, sans-serif" font-size="108" font-weight="800" letter-spacing="-2" fill="#0F172A">KioskDrop</text>
+  <g transform="translate(685, 230)">
+    <rect width="215" height="48" rx="10" fill="rgba(37,99,235,0.08)" stroke="rgba(37,99,235,0.2)" stroke-width="1.5" />
+    <text x="107.5" y="32" font-family="system-ui, -apple-system, 'Inter', 'Segoe UI', Roboto, sans-serif" font-size="22" font-weight="700" letter-spacing="2.5" fill="#2563EB" text-anchor="middle">ENTERPRISE</text>
+  </g>
+</svg>
